@@ -1,11 +1,10 @@
 // tradeapitest.cpp :
 // 一个简单的例子，介绍CThostFtdcTraderApi和CThostFtdcTraderSpi接口的使用。
 // 本例将演示一个报单录入操作的过程
-#include <stdio.h>
-#include <windows.h>
-#include "FtdcTraderApi.h"
-// 报单录入操作是否完成的标志
 
+
+
+// 报单录入操作是否完成的标志
 // Create a manual reset event with no signal
 // 这段需要注释掉，这是windows下的代码
 //HANDLE g_hEvent = CreateEvent(NULL, true, false, NULL);
