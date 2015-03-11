@@ -10,6 +10,7 @@
 // 报单录入操作是否完成的标志
 // Create a manual reset event with no signal
 // 这段需要注释掉，这是windows下的代码
+// TODO 映射功能到linux
 //HANDLE g_hEvent = CreateEvent(NULL, true, false, NULL);
 
 // 会员代码
@@ -47,7 +48,7 @@ class CSimpleHandler : public CThostFtdcTraderSpi{
         printf("password:");
         scanf("%s", (char*) &reqUserLogin.Password);
         // 发出登陆请求
-        //m_pUserApi->ReqUserLogin(&reqUserLogin, 0);
+		m_pUserApi->ReqUserLogin(&reqUserLogin, 0);
     }
 	//*/
 
@@ -61,7 +62,7 @@ class CSimpleHandler : public CThostFtdcTraderSpi{
 	//*/
 
     // 当客户端发出登录请求之后，该方法会被调用，通知客户端登录是否成功
-    /*
+    //*
 	virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
         CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
     {
@@ -73,7 +74,7 @@ class CSimpleHandler : public CThostFtdcTraderSpi{
             // 端登失败，客户端需进行错误处理
             printf("Failed to login, errorcode=%d errormsg=%s requestid=%d chain=%d",
               pRspInfo->ErrorID, pRspInfo->ErrorMsg, nRequestID, bIsLast);
-            exit(-1);
+            //exit(-1);
         }
         // 端登成功,发出报单录入请求
         CThostFtdcInputOrderField ord;
@@ -115,13 +116,13 @@ class CSimpleHandler : public CThostFtdcTraderSpi{
         // 强平原因
         ord.ForceCloseReason = THOST_FTDC_FCC_NotForceClose;
         // 自动挂起标志
-        ord.IsAutoSuspend = 0;
-        m_pUserApi->ReqOrderInsert(&ord, 1);
+        ord.IsAutoSuspend = 0;		
+		m_pUserApi->ReqOrderInsert(&ord, 1);
     }
     //*/
 	
 	// 报单录入应答
-    /*
+    //*
 	virtual void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder,
         CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
     {
@@ -129,13 +130,14 @@ class CSimpleHandler : public CThostFtdcTraderSpi{
         printf("ErrorCode=[%d], ErrorMsg=[%s]\n", pRspInfo->ErrorID,
         pRspInfo->ErrorMsg);
         // 通知报单录入完成
-        SetEvent(g_hEvent);
+        // TODO 映射功能到linux
+		//SetEvent(g_hEvent);
     };
 	//*/
 
 
     ///报单回报
-    /*
+    //*
 	virtual void OnRtnOrder(CThostFtdcOrderField *pOrder)
     {
         printf("OnRtnOrder:\n");
@@ -144,7 +146,7 @@ class CSimpleHandler : public CThostFtdcTraderSpi{
 	//*/
 
     // 针对用户请求的出错通知
-    /*
+    //*
 	virtual void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID,
         bool bIsLast)
     {
@@ -159,7 +161,7 @@ class CSimpleHandler : public CThostFtdcTraderSpi{
 
     private:
     // 指向CThostFtdcMduserApi实例的指针
-    //CThostFtdcTraderApi *m_pUserApi;
+    CThostFtdcTraderApi *m_pUserApi;
 };
 
 
@@ -192,5 +194,6 @@ int main()
     // 释放API实例
     //pUserApi->Release();
     
+	exit(-1);
 	return 0;
 }
