@@ -58,8 +58,8 @@ class CSimpleHandler : public CThostFtdcTraderSpi
         printf("RequestID=[%d], Chain=[%d]\n", nRequestID, bIsLast);
         if (pRspInfo->ErrorID != 0) {
             // 端登失败，客户端需进行错误处理
-            printf("Failed to login, errorcode=%d errormsg=%s requestid=%d
-            chain=%d", pRspInfo->ErrorID, pRspInfo->ErrorMsg, nRequestID, bIsLast);
+            printf("Failed to login, errorcode=%d errormsg=%s requestid=%d chain=%d",
+              pRspInfo->ErrorID, pRspInfo->ErrorMsg, nRequestID, bIsLast);
             exit(-1);
         }
         // 端登成功,发出报单录入请求
