@@ -28,7 +28,7 @@ class CSimpleHandler : public CThostFtdcTraderSpi{
 
     public:
     // 构造函数，需要一个有效的指向CThostFtdcMduserApi实例的指针
-    //CSimpleHandler(CThostFtdcTraderApi *pUserApi) : m_pUserApi(pUserApi) {}
+    CSimpleHandler(CThostFtdcTraderApi *pUserApi) : m_pUserApi(pUserApi) {}
     ~CSimpleHandler() {}
 
     // 当客户端与交易托管系统建立起通信连接，客户端需要进行登录
@@ -169,11 +169,11 @@ class CSimpleHandler : public CThostFtdcTraderSpi{
 int main()
 {
     // 产生一个CThostFtdcTraderApi实例
-    //CThostFtdcTraderApi *pUserApi = CThostFtdcTraderApi::CreateFtdcTraderApi();
+    CThostFtdcTraderApi *pUserApi = CThostFtdcTraderApi::CreateFtdcTraderApi();
     // 产生一个事件处理的实例
-    //CSimpleHandler sh(pUserApi);
+    CSimpleHandler sh(pUserApi);
     // 注册一事件处理的实例
-    //pUserApi->RegisterSpi(&sh);
+    pUserApi->RegisterSpi(&sh);
     // 订阅私有流
     // TERT_RESTART:从本交易日开始重传
     // TERT_RESUME:从上次收到的续传
@@ -194,6 +194,5 @@ int main()
     // 释放API实例
     //pUserApi->Release();
     
-	exit(-1);
 	return 0;
 }
