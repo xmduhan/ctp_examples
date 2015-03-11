@@ -18,7 +18,7 @@ TThostFtdcBrokerIDType g_chBrokerID;
 // 交易用户代码
 TThostFtdcUserIDType g_chUserID;
 
-//using namespace std;
+using namespace std;
 
 
 
@@ -178,21 +178,24 @@ int main()
     // TERT_RESTART:从本交易日开始重传
     // TERT_RESUME:从上次收到的续传
     // TERT_QUICK:只传送登录后私有流的内容
-    //pUserApi->SubscribePrivateTopic(TERT_RESUME);
+    // TODO 在API文档中找到其含义
+	//pUserApi->SubscribePrivateTopic(TERT_RESUME);
     // 订阅公共流
     // TERT_RESTART:从本交易日开始重传
     // TERT_RESUME:从上次收到的续传
     // TERT_QUICK:只传送登录后公共流的内容
-    //pUserApi->SubscribePublicTopic(TERT_RESUME);
+    // TODO 在API文档中找到其含义
+	//pUserApi->SubscribePublicTopic(TERT_RESUME);
     // 设置交易托管系统服务的地址，可以注册多个地址备用
-    //pUserApi->RegisterFront("tcp://172.16.0.31:57205");
+    pUserApi->RegisterFront((char*) "tcp://172.16.0.31:57205");
     // 使客户端开始与后台服务建立连接
-    //pUserApi->Init();
+    pUserApi->Init();
     // 客户端等待报单操作完成
     // 这段必须注释掉，因为这是windows下的API
-    //WaitForSingleObject(g_hEvent, INFINITE);
+    // TODO:逻辑需要移植到linux下
+	//WaitForSingleObject(g_hEvent, INFINITE);
     // 释放API实例
-    //pUserApi->Release();
+    pUserApi->Release();
     
 	return 0;
 }
