@@ -10,20 +10,30 @@
 //HANDLE g_hEvent = CreateEvent(NULL, true, false, NULL);
 
 // 会员代码
-TThostFtdcBrokerIDType g_chBrokerID;
+//TThostFtdcBrokerIDType g_chBrokerID;
 // 交易用户代码
-TThostFtdcUserIDType g_chUserID;
+//TThostFtdcUserIDType g_chUserID;
+
+using namespace std;
 
 
-class CSimpleHandler : public CThostFtdcTraderSpi
-{
+
+class QuoteMdSpi:CThostFtdcMdSpi{
+
+};
+
+
+//class CSimpleHandler : CThostFtdcTraderSpi{
+class CSimpleHandler{
+
     public:
     // 构造函数，需要一个有效的指向CThostFtdcMduserApi实例的指针
-    CSimpleHandler(CThostFtdcTraderApi *pUserApi) : m_pUserApi(pUserApi) {}
-    ~CSimpleHandler() {}
+    //CSimpleHandler(CThostFtdcTraderApi *pUserApi) : m_pUserApi(pUserApi) {}
+    //~CSimpleHandler() {}
 
     // 当客户端与交易托管系统建立起通信连接，客户端需要进行登录
-    virtual void OnFrontConnected()
+    /*
+	virtual void OnFrontConnected()
     {
         CThostFtdcReqUserLoginField reqUserLogin;
         // get BrokerID
@@ -40,16 +50,20 @@ class CSimpleHandler : public CThostFtdcTraderSpi
         // 发出登陆请求
         m_pUserApi->ReqUserLogin(&reqUserLogin, 0);
     }
+	//*/
 
     // 当客户端与交易托管系统通信连接断开时，该方法被调用
-    virtual void OnFrontDisconnected(int nReason)
+    /*
+	virtual void OnFrontDisconnected(int nReason)
     {
       // 当发生这个情况后，API会自动重新连接，客户端可不做处理
       printf("OnFrontDisconnected.\n");
     }
+	//*/
 
     // 当客户端发出登录请求之后，该方法会被调用，通知客户端登录是否成功
-    virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
+    /*
+	virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
         CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
     {
         printf("OnRspUserLogin:\n");
@@ -105,8 +119,11 @@ class CSimpleHandler : public CThostFtdcTraderSpi
         ord.IsAutoSuspend = 0;
         m_pUserApi->ReqOrderInsert(&ord, 1);
     }
-    // 报单录入应答
-    virtual void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder,
+    //*/
+	
+	// 报单录入应答
+    /*
+	virtual void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder,
         CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)
     {
         // 输出报单录入结果
@@ -115,14 +132,21 @@ class CSimpleHandler : public CThostFtdcTraderSpi
         // 通知报单录入完成
         SetEvent(g_hEvent);
     };
+	//*/
+
+
     ///报单回报
-    virtual void OnRtnOrder(CThostFtdcOrderField *pOrder)
+    /*
+	virtual void OnRtnOrder(CThostFtdcOrderField *pOrder)
     {
         printf("OnRtnOrder:\n");
         printf("OrderSysID=[%s]\n", pOrder->OrderSysID);
     }
+	//*/
+
     // 针对用户请求的出错通知
-    virtual void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID,
+    /*
+	virtual void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID,
         bool bIsLast)
     {
         printf("OnRspError:\n");
@@ -132,10 +156,11 @@ class CSimpleHandler : public CThostFtdcTraderSpi
         // 客户端需进行错误处理
         //{客户端的错误处理}
     }
+	//*/
 
     private:
     // 指向CThostFtdcMduserApi实例的指针
-    CThostFtdcTraderApi *m_pUserApi;
+    //CThostFtdcTraderApi *m_pUserApi;
 };
 
 
@@ -143,29 +168,30 @@ class CSimpleHandler : public CThostFtdcTraderSpi
 int main()
 {
     // 产生一个CThostFtdcTraderApi实例
-    CThostFtdcTraderApi *pUserApi = CThostFtdcTraderApi::CreateFtdcTraderApi();
+    //CThostFtdcTraderApi *pUserApi = CThostFtdcTraderApi::CreateFtdcTraderApi();
     // 产生一个事件处理的实例
-    CSimpleHandler sh(pUserApi);
+    //CSimpleHandler sh(pUserApi);
     // 注册一事件处理的实例
-    pUserApi->RegisterSpi(&sh);
+    //pUserApi->RegisterSpi(&sh);
     // 订阅私有流
     // TERT_RESTART:从本交易日开始重传
     // TERT_RESUME:从上次收到的续传
     // TERT_QUICK:只传送登录后私有流的内容
-    pUserApi->SubscribePrivateTopic(TERT_RESUME);
+    //pUserApi->SubscribePrivateTopic(TERT_RESUME);
     // 订阅公共流
     // TERT_RESTART:从本交易日开始重传
     // TERT_RESUME:从上次收到的续传
     // TERT_QUICK:只传送登录后公共流的内容
-    pUserApi->SubscribePublicTopic(TERT_RESUME);
+    //pUserApi->SubscribePublicTopic(TERT_RESUME);
     // 设置交易托管系统服务的地址，可以注册多个地址备用
-    pUserApi->RegisterFront("tcp://172.16.0.31:57205");
+    //pUserApi->RegisterFront("tcp://172.16.0.31:57205");
     // 使客户端开始与后台服务建立连接
-    pUserApi->Init();
+    //pUserApi->Init();
     // 客户端等待报单操作完成
     // 这段必须注释掉，因为这是windows下的API
     //WaitForSingleObject(g_hEvent, INFINITE);
     // 释放API实例
-    pUserApi->Release();
-    return 0;
+    //pUserApi->Release();
+    
+	return 0;
 }
