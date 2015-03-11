@@ -1,3 +1,6 @@
+
+#include "tradeapitest.h"
+
 // tradeapitest.cpp :
 // 一个简单的例子，介绍CThostFtdcTraderApi和CThostFtdcTraderSpi接口的使用。
 // 本例将演示一个报单录入操作的过程
@@ -10,50 +13,46 @@
 //HANDLE g_hEvent = CreateEvent(NULL, true, false, NULL);
 
 // 会员代码
-//TThostFtdcBrokerIDType g_chBrokerID;
+TThostFtdcBrokerIDType g_chBrokerID;
 // 交易用户代码
-//TThostFtdcUserIDType g_chUserID;
+TThostFtdcUserIDType g_chUserID;
 
-using namespace std;
-
-
-
-class QuoteMdSpi:CThostFtdcMdSpi{
-
-};
+//using namespace std;
 
 
-//class CSimpleHandler : CThostFtdcTraderSpi{
-class CSimpleHandler{
+
+
+
+class CSimpleHandler : public CThostFtdcTraderSpi{
 
     public:
     // 构造函数，需要一个有效的指向CThostFtdcMduserApi实例的指针
     //CSimpleHandler(CThostFtdcTraderApi *pUserApi) : m_pUserApi(pUserApi) {}
-    //~CSimpleHandler() {}
+    ~CSimpleHandler() {}
 
     // 当客户端与交易托管系统建立起通信连接，客户端需要进行登录
-    /*
+    //*
 	virtual void OnFrontConnected()
     {
         CThostFtdcReqUserLoginField reqUserLogin;
         // get BrokerID
         printf("BrokerID:");
-        scanf("%s", &g_chBrokerID);
-        strcpy(reqUserLogin. BrokerID, g_chBrokerID);
+        scanf("%s", (char*) &g_chBrokerID);
+        strcpy(reqUserLogin.BrokerID, g_chBrokerID);
         // get userid
         printf("userid:");
-        scanf("%s", &g_chUserID);
+        scanf("%s", (char*) &g_chUserID);
         strcpy(reqUserLogin.UserID, g_chUserID);
         // get password
         printf("password:");
-        scanf("%s", &reqUserLogin.Password);
+        scanf("%s", (char*) &reqUserLogin.Password);
         // 发出登陆请求
-        m_pUserApi->ReqUserLogin(&reqUserLogin, 0);
+        //m_pUserApi->ReqUserLogin(&reqUserLogin, 0);
     }
 	//*/
 
     // 当客户端与交易托管系统通信连接断开时，该方法被调用
-    /*
+    //*
 	virtual void OnFrontDisconnected(int nReason)
     {
       // 当发生这个情况后，API会自动重新连接，客户端可不做处理
