@@ -185,8 +185,10 @@ int main()
     // TERT_QUICK:只传送登录后公共流的内容
 	pUserApi->SubscribePublicTopic(THOST_TERT_RESUME);
     // 设置交易托管系统服务的地址，可以注册多个地址备用
-    pUserApi->RegisterFront((char*) "tcp://172.16.0.31:57205");
-    // 使客户端开始与后台服务建立连接
+    //pUserApi->RegisterFront((char*) "tcp://172.16.0.31:57205");
+    pUserApi->RegisterFront((char*) "tcp://ctpmn1-front1.citicsf.com:51213");
+    
+	// 使客户端开始与后台服务建立连接
     pUserApi->Init();
     // 客户端等待报单操作完成
     // 这段必须注释掉，因为这是windows下的API
