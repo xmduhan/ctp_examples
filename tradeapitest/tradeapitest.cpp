@@ -178,13 +178,11 @@ int main()
     // TERT_RESTART:从本交易日开始重传
     // TERT_RESUME:从上次收到的续传
     // TERT_QUICK:只传送登录后私有流的内容
-    // TODO 在API文档中找到其含义
 	pUserApi->SubscribePrivateTopic(THOST_TERT_RESUME);
     // 订阅公共流
     // TERT_RESTART:从本交易日开始重传
     // TERT_RESUME:从上次收到的续传
     // TERT_QUICK:只传送登录后公共流的内容
-    // TODO 在API文档中找到其含义
 	pUserApi->SubscribePublicTopic(THOST_TERT_RESUME);
     // 设置交易托管系统服务的地址，可以注册多个地址备用
     pUserApi->RegisterFront((char*) "tcp://172.16.0.31:57205");
