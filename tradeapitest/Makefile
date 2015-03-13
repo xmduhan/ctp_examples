@@ -1,6 +1,6 @@
 
 all : *.cpp *.h
-	g++ -c *.cpp /etc/ctp/lib/*.so -o tradeapitest
+	g++ -g *.cpp /etc/ctp/lib/*.so -o tradeapitest
 
 
 clean : 
