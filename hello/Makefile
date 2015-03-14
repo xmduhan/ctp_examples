@@ -4,4 +4,4 @@ all : *.cpp *.h
 
 
 clean : 
-	rm -f *.o rm *.out *.con hello
+	rm -f *.o *.out *.con hello

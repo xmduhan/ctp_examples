@@ -4,4 +4,4 @@ all : *.cpp *.h
 
 
 clean : 
-	rm -f *.o rm *.out *.con tradeapitest
+	rm -f *.o *.out *.con tradeapitest
