@@ -1,6 +1,6 @@
 
 all : *.c
-  gcc *.c -o convert
+	gcc *.c -o convert
 
 clean :
-  rm -f *.o *.out convert
+	rm -f *.o *.out convert

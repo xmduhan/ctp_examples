@@ -14,6 +14,8 @@
 #include <semaphore.h>
 #include <unistd.h>
 
+
+
 // 服务器地址
 char * serverAddress = (char *)"tcp://101.231.96.18:51205";
 // 登录请求结构体
@@ -74,7 +76,12 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		virtual void OnRspQryInstrument(
 				CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo,
 				int nRequestID, bool bIsLast) {
-				printf("OnReqUserLogout:called\n");
+				
+				printf("InstrumentID=%s,ExchangeID=%s,InstrumentName=%s,ProductID=%s\n",
+					pInstrument->InstrumentID,pInstrument->ExchangeID,pInstrument->InstrumentName,pInstrument->ProductID);
+				if(bIsLast){
+					sem_post(&sem);
+				}		
 		};
 };
 
@@ -117,7 +124,7 @@ int main(){
 
 	// 查询合约
 	memset(&qryInstrumentField,0,sizeof(qryInstrumentField));
-	int result = pApi->ReqQryInstrument(&qryInstrumentField,requestID++);
+	int result = pTraderApi->ReqQryInstrument(&qryInstrumentField,requestID++);
 	sem_wait(&sem);
 
 	// 拷贝用户登录信息到登出信息

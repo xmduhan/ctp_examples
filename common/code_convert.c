@@ -1,5 +1,7 @@
 
 #include <iconv.h>
+#include <stdio.h>
+#include <string.h>
 #define OUTLEN 255
 
 //代码转换:从一种编码转为另一种编码
