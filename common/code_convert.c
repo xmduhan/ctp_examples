@@ -1,45 +1,22 @@
-
+#include <iostream>
+#include <fstream>
 #include <iconv.h>
-#define OUTLEN 255
 
-//代码转换:从一种编码转为另一种编码
-int code_convert(char *from_charset,char *to_charset,char *inbuf,int inlen,char *outbuf,int outlen)
+int main(int argc, char *argv[])
 {
-  iconv_t cd;
-  int rc;
-  char **pin = &inbuf;
-  char **pout = &outbuf;
-  cd = iconv_open(to_charset,from_charset);
-  if (cd==0) return -1;
-    memset(outbuf,0,outlen);
-  if (iconv(cd,pin,&inlen,pout,&outlen)==-1) return -1;
-    iconv_close(cd);
-  return 0;
-}
-//UNICODE码转为GB2312码
-int u2g(char *inbuf,int inlen,char *outbuf,int outlen)
-{
-  return code_convert("utf-8","gb2312",inbuf,inlen,outbuf,outlen);
-}
-//GB2312码转为UNICODE码
-int g2u(char *inbuf,size_t inlen,char *outbuf,size_t outlen)
-{
-  return code_convert("gb2312","utf-8",inbuf,inlen,outbuf,outlen);
-}
+    char src[] = "abcčde";
+    char dst[100];
+    size_t srclen = 6;
+    size_t dstlen = 12;
 
-int main()
-{
-  char *in_utf8 = "姝ｅ?ㄥ??瑁?";
-  char *in_gb2312 = "正在安装";
-  char out[OUTLEN];
-  int rc;
+    fprintf(stderr,"in: %s\n",src);
 
-  //unicode码转为gb2312码
-  rc = u2g(in_utf8,strlen(in_utf8),out,OUTLEN);
-  printf("unicode-->gb2312 out=%sn",out);
-  //gb2312码转为unicode码
-  rc = g2u(in_gb2312,strlen(in_gb2312),out,OUTLEN);
-  printf("gb2312-->unicode out=%sn",out);
+    char * pIn = src;
+    char * pOut = ( char*)dst;
 
-  return(0);
+    iconv_t conv = iconv_open("UTF-8","CP1250");
+    iconv(conv, &pIn, &srclen, &pOut, &dstlen);
+    iconv_close(conv);
+
+    fprintf(stderr,"out: %s\n",dst);
 }
