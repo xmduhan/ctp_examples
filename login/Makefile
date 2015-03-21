@@ -1,6 +1,6 @@
 all : *.cpp
-  g++ *.cpp /etc/ctp/lib/*.so -o login
+	g++ -pthread *.cpp /etc/ctp/lib/*.so -o login
 
 
 clean :
-  rm -f *.o rm *.out *.con login
+	rm -f *.o rm *.out *.con login
