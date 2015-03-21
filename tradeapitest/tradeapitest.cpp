@@ -56,8 +56,8 @@ class CSimpleHandler : public CThostFtdcTraderSpi{
     //*
 	virtual void OnFrontDisconnected(int nReason)
     {
-      // 当发生这个情况后，API会自动重新连接，客户端可不做处理
-      printf("OnFrontDisconnected.\n");
+      	// 当发生这个情况后，API会自动重新连接，客户端可不做处理
+     	printf("OnFrontDisconnected.\n");
     }
 	//*/
 
@@ -73,10 +73,13 @@ class CSimpleHandler : public CThostFtdcTraderSpi{
         if (pRspInfo->ErrorID != 0) {
             // 端登失败，客户端需进行错误处理
             printf("Failed to login, errorcode=%d errormsg=%s requestid=%d chain=%d",
-              pRspInfo->ErrorID, pRspInfo->ErrorMsg, nRequestID, bIsLast);
-            //exit(-1);
-        }
-        // 端登成功,发出报单录入请求
+            pRspInfo->ErrorID, pRspInfo->ErrorMsg, nRequestID, bIsLast);
+            exit(-1);
+        }else{        
+			printf("登录成功\n");
+		}
+
+		// 端登成功,发出报单录入请求
         CThostFtdcInputOrderField ord;
         memset(&ord, 0, sizeof(ord));
         //经纪公司代码
@@ -186,7 +189,9 @@ int main()
 	pUserApi->SubscribePublicTopic(THOST_TERT_RESUME);
     // 设置交易托管系统服务的地址，可以注册多个地址备用
     //pUserApi->RegisterFront((char*) "tcp://172.16.0.31:57205");
-    pUserApi->RegisterFront((char*) "tcp://ctpmn1-front1.citicsf.com:51213");
+    //pUserApi->RegisterFront((char*) "tcp://ctpmn1-front1.citicsf.com:51213");
+    //pUserApi->RegisterFront((char*) "tcp://101.231.96.18:51213");
+    pUserApi->RegisterFront((char*) "tcp://101.231.96.18:51205");
     
 	// 使客户端开始与后台服务建立连接
     pUserApi->Init();
