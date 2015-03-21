@@ -14,6 +14,8 @@
 #include <semaphore.h>
 #include <unistd.h>
 
+// 字符串编码转化
+#include "../common/code_convert.h"
 
 
 // 服务器地址
@@ -76,9 +78,10 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		virtual void OnRspQryInstrument(
 				CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo,
 				int nRequestID, bool bIsLast) {
-				
-				printf("InstrumentID=%s,ExchangeID=%s,InstrumentName=%s,ProductID=%s\n",
-					pInstrument->InstrumentID,pInstrument->ExchangeID,pInstrument->InstrumentName,pInstrument->ProductID);
+				char InstrumentName[100];
+				codeConvert((char *)"GBK",(char*)"UTF8",pInstrument->InstrumentName,InstrumentName,sizeof(InstrumentName));			
+				printf("InstrumentID=%s,ExchangeID=%s,InstrumentName=%s\n",
+					pInstrument->InstrumentID,pInstrument->ExchangeID,InstrumentName);
 				if(bIsLast){
 					sem_post(&sem);
 				}		

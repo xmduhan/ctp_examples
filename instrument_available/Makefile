@@ -1,5 +1,5 @@
 all : *.cpp
-	g++ -pthread *.cpp /etc/ctp/lib/*.so -o instrument_available
+	g++ -pthread *.cpp /etc/ctp/lib/*.so ../common/*.o -o instrument_available
 
 
 clean :

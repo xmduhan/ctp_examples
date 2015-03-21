@@ -1,6 +1,5 @@
-
-all : *.c
-	gcc *.c -o convert
+all : *.cpp
+	g++ -c *.cpp  
 
 clean :
-	rm -f *.o *.out convert
+	rm -f *.o *.out 
