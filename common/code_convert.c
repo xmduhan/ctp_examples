@@ -32,6 +32,7 @@ int main()
   char *in_utf8 = "姝ｅ?ㄥ??瑁?";
   char *in_gb2312 = "正在安装";
   char out[OUTLEN];
+  int rc;
 
   //unicode码转为gb2312码
   rc = u2g(in_utf8,strlen(in_utf8),out,OUTLEN);
