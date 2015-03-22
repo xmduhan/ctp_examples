@@ -15,7 +15,7 @@
 #include <unistd.h>
 
 // 字符串编码转化
-#include "../common/code_convert.h"
+#include <code_convert.h>
 
 
 // 服务器地址
@@ -78,11 +78,14 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		virtual void OnRspQryInstrument(
 				CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo,
 				int nRequestID, bool bIsLast) {
+				static int i=0;
 				char InstrumentName[100];
 				codeConvert((char *)"GBK",(char*)"UTF8",pInstrument->InstrumentName,InstrumentName,sizeof(InstrumentName));			
 				printf("InstrumentID=%s,ExchangeID=%s,InstrumentName=%s\n",
 					pInstrument->InstrumentID,pInstrument->ExchangeID,InstrumentName);
+				i++;
 				if(bIsLast){
+					printf("一共有%d合约可供交易\n",i);
 					sem_post(&sem);
 				}		
 		};
