@@ -281,7 +281,9 @@ public:
 	virtual void OnRtnChangeAccountByBank(CThostFtdcChangeAccountField *pChangeAccount) {};
 };
 
-class TRADER_API_EXPORT CThostFtdcTraderApi
+//由于CappHeaderParse的bug会把TRADER_API_EXPORT当成类名，这里先把它去掉
+//class TRADER_API_EXPORT CThostFtdcTraderApi
+class CThostFtdcTraderApi
 {
 public:
 	///创建TraderApi

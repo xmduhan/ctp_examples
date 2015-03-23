@@ -26,8 +26,9 @@ CThostFtdcReqUserLoginField userLoginField;
 CThostFtdcUserLogoutField userLogoutField;
 // 线程同步标志
 sem_t sem;
-// 合约查询结构
-CThostFtdcQryInstrumentField qryInstrumentField;
+
+// 查询资金账户的请求结构体
+CThostFtdcQryTradingAccountField qryTradingAccountField;
 // requestID
 int requestID = 0;
 
@@ -75,20 +76,26 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		}
 
 		// 查询合约结果响应
-		virtual void OnRspQryInstrument(
-				CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo,
-				int nRequestID, bool bIsLast) {
-				static int i=0;
-				char InstrumentName[100];
-				codeConvert((char *)"GBK",(char*)"UTF8",pInstrument->InstrumentName,InstrumentName,sizeof(InstrumentName));			
-				printf("InstrumentID=%s,ExchangeID=%s,InstrumentName=%s\n",
-					pInstrument->InstrumentID,pInstrument->ExchangeID,InstrumentName);
-				i++;
-				if(bIsLast){
-					printf("一共有%d合约可供交易\n",i);
-					sem_post(&sem);
-				}		
+		virtual void OnRspQryTradingAccount(
+			CThostFtdcTradingAccountField *pTradingAccount,
+			CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+				
+				printf("OnRspQryTradingAccount:called");
+				//static int i=0;
+				//char InstrumentName[100];
+				//codeConvert((char *)"GBK",(char*)"UTF8",pInstrument->InstrumentName,InstrumentName,sizeof(InstrumentName));			
+				//printf("InstrumentID=%s,ExchangeID=%s,InstrumentName=%s\n",
+				//	pInstrument->InstrumentID,pInstrument->ExchangeID,InstrumentName);
+				//i++;
+				//if(bIsLast){
+				//	printf("一共有%d合约可供交易\n",i);
+				//	sem_post(&sem);
+				//}		
 		};
+
+		virtual void OnRspError(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
+			 printf("OnRspError:called");
+		}
 };
 
 
@@ -129,8 +136,11 @@ int main(){
 	sem_wait(&sem);
 
 	// 查询合约
-	memset(&qryInstrumentField,0,sizeof(qryInstrumentField));
-	int result = pTraderApi->ReqQryInstrument(&qryInstrumentField,requestID++);
+	memset(&qryTradingAccountField,0,sizeof(qryTradingAccountField));	
+	strcpy(qryTradingAccountField.BrokerID,userLoginField.BrokerID);
+	strcpy(qryTradingAccountField.InvestorID,userLoginField.UserID);
+
+	int result = pTraderApi->ReqQryTradingAccount(&qryTradingAccountField,requestID++);
 	sem_wait(&sem);
 
 	// 拷贝用户登录信息到登出信息
