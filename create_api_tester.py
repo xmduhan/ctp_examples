@@ -2,7 +2,7 @@
 
 import sys
 from jinja2 import Environment, FileSystemLoader
-
+from os import path
 
 
 
@@ -20,12 +20,27 @@ def main():
 	apiName = sys.argv[1]
 	print '开始生成%s的接口测试代码:...' % apiName
 
+	# 测试使用
+	apiName = 'QryTradingAccount'
+
+
+
 
 	# 读取模板信息
 	env = Environment(loader=FileSystemLoader('templates'))
+	
+	# 生成代码文件
 	source = env.get_template('source.tpl.cpp')
-	#print source.render()
-		
+	sourcePath = path.join(apiName,'%s.cpp' % apiName)
+	with open(sourcePath, 'w') as f :
+		f.write(source.render().encode('utf-8'))	
+	
+	
+	# 生成make文件
+	makefile = env.get_template('Makefile.tpl')
+	makefilePath = path.join(apiName,'Makefile')
+	with open(makefilePath, 'w') as f :
+		f.write(source.render().encode('utf-8'))
 
 
 
