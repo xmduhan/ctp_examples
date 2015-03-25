@@ -21,9 +21,12 @@ def main():
 	print '开始生成%s的接口测试代码:...' % apiName
 
 	# 测试使用
-	apiName = 'QryTradingAccount'
+	apiName = 'QryInstrument'
 
 
+	data = {
+		'apiName' : apiName,
+	}
 
 
 	# 读取模板信息
@@ -33,14 +36,14 @@ def main():
 	source = env.get_template('source.tpl.cpp')
 	sourcePath = path.join(apiName,'%s.cpp' % apiName)
 	with open(sourcePath, 'w') as f :
-		f.write(source.render().encode('utf-8'))	
+		f.write(source.render(**data).encode('utf-8'))	
 	
 	
 	# 生成make文件
 	makefile = env.get_template('Makefile.tpl')
 	makefilePath = path.join(apiName,'Makefile')
 	with open(makefilePath, 'w') as f :
-		f.write(source.render().encode('utf-8'))
+		f.write(makefile.render(**data).encode('utf-8'))
 
 
 

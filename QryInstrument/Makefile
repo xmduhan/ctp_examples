@@ -4,8 +4,8 @@ CC=g++
 CFLAGS=-pthread -I$(IDIR) $(LIBS)
 
 all : *.cpp
-	$(CC) *.cpp $(CFLAGS) -o {{ apiName }}
+	$(CC) *.cpp $(CFLAGS) -o QryInstrument
 
 
 clean :
-	rm -f *.o rm *.out *.con  {{ apiName }}
+	rm -f *.o rm *.out *.con  QryInstrument
