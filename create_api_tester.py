@@ -1,6 +1,9 @@
 # -*- coding: utf8 -*-
 
 import sys
+from jinja2 import Environment, FileSystemLoader
+
+
 
 
 def main():
@@ -14,6 +17,15 @@ def main():
 		print '其中API名称形如QryTradingAccount，对应的请求函数为ReqQryTradingAccount，对应的相应函数为OnRspQryTradingAccount。'
 		return(0)
 	
+	apiName = sys.argv[1]
+	print '开始生成%s的接口测试代码:...' % apiName
+
+
+	# 读取模板信息
+	env = Environment(loader=FileSystemLoader('templates'))
+	source = env.get_template('source.tpl.cpp')
+	#print source.render()
+		
 
 
 
