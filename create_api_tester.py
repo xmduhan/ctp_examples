@@ -25,19 +25,30 @@ def main():
 	apiName = 'QryInstrument'
 
 
-	# 获取相应函数相关信息
+	
+	# 读取相关cpp头文件	
+	ThostFtdcTraderApi_h = cpphelper.getCppHeader('api/ThostFtdcTraderApi.h',['TRADER_API_EXPORT'])
+	
+	# 获取响应函数相关信息
 	responseMethodName = 'OnRsp%s' % apiName
-	header = cpphelper.getCppHeader('api/ThostFtdcTraderApi.h',['TRADER_API_EXPORT'])
-	CThostFtdcTraderSpi = cpphelper.getClass(header,'CThostFtdcTraderSpi')
+	CThostFtdcTraderSpi = cpphelper.getClass(ThostFtdcTraderApi_h,'CThostFtdcTraderSpi')
 	responseMethod = cpphelper.getClassMethod(CThostFtdcTraderSpi,'public',responseMethodName)
 	responseMethodParameters = cpphelper.getMethodParameters(responseMethod)
 
+	# 获取调用函数相关信息
+	requestMethodName = 'Req%s' % apiName
+	CThostFtdcTraderApi = cpphelper.getClass(ThostFtdcTraderApi_h,'CThostFtdcTraderApi')
+	requestMethod = cpphelper.getClassMethod(CThostFtdcTraderApi,'public',requestMethodName)
+	requestMethodParameters = cpphelper.getMethodParameters(requestMethod)	
 
 
-
-
+	# 读取
 	data = {
 		'apiName' : apiName,
+		'responseMethod' : responseMethod,
+		'responseMethodParameters' : responseMethodParameters,
+		'requestMethod' : requestMethod,
+		'requestMethodParameters' : requestMethodParameters,
 	}
 
 

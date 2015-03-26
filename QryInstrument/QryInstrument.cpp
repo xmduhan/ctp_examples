@@ -87,15 +87,11 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		//	printf("一共有%d合约可供交易\n",i);
 		//	sem_post(&sem);
 		//}	
-			
-		a
-			
-		c
-			
-		b
-		
-		1
 	}
+	
+
+
+
 };
 
 
