@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 
 import sys
+import cpphelper
 from jinja2 import Environment, FileSystemLoader
 from os import path
 
@@ -22,6 +23,17 @@ def main():
 
 	# 测试使用
 	apiName = 'QryInstrument'
+
+
+	# 获取相应函数相关信息
+	responseMethodName = 'OnRsp%s' % apiName
+	header = cpphelper.getCppHeader('api/ThostFtdcTraderApi.h',['TRADER_API_EXPORT'])
+	CThostFtdcTraderSpi = cpphelper.getClass(header,'CThostFtdcTraderSpi')
+	responseMethod = cpphelper.getClassMethod(CThostFtdcTraderSpi,'public',responseMethodName)
+	responseMethodParameters = cpphelper.getMethodParameters(responseMethod)
+
+
+
 
 
 	data = {
@@ -49,3 +61,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+

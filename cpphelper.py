@@ -4,12 +4,18 @@
 import CppHeaderParser
 
 
-def getCppHeader(filename):
+def getCppHeader(filename,ignoreSymbols=[]):
 	'''
 	通过一个文件名获得一个CppHeader结构数据
 	filename 文件名称(含路径)
+	ignoreSymbols  需要忽略的符号
 	返回 CppHeader结构
 	'''
+	#TODO : 这里存在一个问题，如果使用了ignoreSymbols由于使用CppHeaderParser.ignoreSymbols.extend(ignoreSymbols)
+	#       将影响到后续的调用，这个影响无法清楚，一直要等到重启解释器。
+	
+	if ignoreSymbols and type(ignoreSymbols) == list:
+		CppHeaderParser.ignoreSymbols.extend(ignoreSymbols)	
 	return CppHeaderParser.CppHeader(filename)
 
 
@@ -30,9 +36,10 @@ def getClassMethod(aclass,methodType,methodName):
 	methodType 方法类型(指public,protected,private)
 	methodName 方法名称
 	返回 Method结构
-	TODO:这里存在一个问题，就是在c++类中方法可以重载，方法名称不唯一
-		 在CTP接口函数中不存在这种情况，暂时忽略
 	'''
+	# TODO : 这里存在一个问题，就是在c++类中方法可以重载，方法名称不唯一
+	#	     在CTP接口函数中不存在这种情况，暂时忽略
+	
 	return {method['name']:method for method in aclass['methods'][methodType]}[methodName]
 
 def getStructFields(struct):
