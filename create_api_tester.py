@@ -57,23 +57,24 @@ def main():
 		print '无法处理的请求API结构:%s' % methedDeclare
 		return(0)
 	
-	# 读取请求类型的所有字段列表
+	# 读取请求类型的所有字段列表和原始类型
 	requestDataStruct = cpphelper.getClass(ThostFtdcUserApiStruct_h,reqParameters[0]['raw_type'])
 	requestFields = cpphelper.getStructFields(requestDataStruct)
 	for field in requestFields:
-		typedef = typedefDict[field['type']]
+		typedef = typedefDict[ field['type'] ]
 		field['original'] = typedef['type']
 		field['len'] = typedef['len']
-		print '%s %s %s %s %s' % (field['name'],field['type'],field['doxygen'],field['original'],field['len'])		
+		#print '%s %s %s %s %s' % (field['name'],field['type'],field['doxygen'],field['original'],field['len'])		
+		
 	
-	
-	# 读取
+	# 生成模板所需的信息集
 	data = {
 		'apiName' : apiName,
 		'responseMethod' : responseMethod,
 		'respParameters' : respParameters,
 		'requestMethod' : requestMethod,
 		'reqParameters' : reqParameters,
+		'requestFields' : requestFields,
 	}
 
 

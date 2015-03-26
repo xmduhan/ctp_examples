@@ -148,8 +148,15 @@ int main(){
 	// 确保没有初始化的数据不会被访问
 	memset(&requestData,0,sizeof(requestData));
 	// 为调用结构题设置参数信息
-	
-		
+	///合约代码
+	strcpy(requestData.InstrumentID,"");
+	///交易所代码
+	strcpy(requestData.ExchangeID,"");
+	///合约在交易所的代码
+	strcpy(requestData.ExchangeInstID,"");
+	///产品代码
+	strcpy(requestData.ProductID,"");
+			
 
 	// 调用API,并等待响应函数返回
 	int result = pTraderApi->ReqQryInstrument(&requestData,requestID++);

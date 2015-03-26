@@ -150,8 +150,17 @@ int main(){
 	// 确保没有初始化的数据不会被访问
 	memset(&requestData,0,sizeof(requestData));
 	// 为调用结构题设置参数信息
-	
-		
+	{% for field in requestFields 
+		%}{{field['doxygen'].decode('utf8')}}
+	{%
+		if field['original'] == 'char' and field['len'] != None 
+	%}strcpy(requestData.{{ field['name'] }},"");{% 
+		elif field['original'] != 'char' and field['len'] == None 
+	%}requestData.{{ field['name'] }} = 0;{% 
+		else 
+	%}//requestData.{{ field['name'] }} = ;{% 
+		endif %}
+	{% endfor %}		
 
 	// 调用API,并等待响应函数返回
 	int result = pTraderApi->{{ requestMethod['name'] }}(&requestData,requestID++);
