@@ -75,8 +75,8 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 	}
 
 	// 查询合约结果响应
-	virtual void OnRspQryInstrument
-		(ThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo,int nRequestID, bool bIsLast) {
+	//virtual void OnRspQryInstrument
+	//	(ThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo,int nRequestID, bool bIsLast) {
 		//static int i=0;
 		//char InstrumentName[100];
 		//codeConvert((char *)"GBK",(char*)"UTF8",pInstrument->InstrumentName,InstrumentName,sizeof(InstrumentName));			
@@ -87,10 +87,15 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		//	printf("一共有%d合约可供交易\n",i);
 		//	sem_post(&sem);
 		//}	
+	//}
+
+	virtual void OnRspQryInstrument(
+		CThostFtdcInstrumentField * pInstrument,
+		CThostFtdcRspInfoField * pRspInfo,
+		int nRequestID,
+		bool bIsLast){
+
 	}
-	
-
-
 
 };
 
