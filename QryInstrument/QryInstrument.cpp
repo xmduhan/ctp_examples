@@ -122,14 +122,26 @@ int main(){
 	sem_wait(&sem);
 
 	// 读取登录信息
-	printf("BrokerID:");
-	scanf("%s", (char*) &userLoginField.BrokerID);
+	char * CTP_BrokerId = getenv("CTP_BrokerId");
+	if (CTP_BrokerId == NULL){
+		printf("环境变量CTP_BrokerId没有设置\n");
+		return(0);
+	}
+	strcpy(userLoginField.BrokerID,CTP_BrokerId);
 
-	printf("userid:");
-	scanf("%s", (char*) &userLoginField.UserID);
+	char * CTP_UserId = getenv("CTP_UserId");
+	if ( CTP_UserId == NULL ){
+		printf("环境变量CTP_UserId没有设置\n");
+		return(0);
+	}	
+	strcpy(userLoginField.UserID,CTP_UserId);
 
-	printf("password:");
-	scanf("%s", (char*) &userLoginField.Password);
+	char * CTP_Password = getenv("CTP_Password");
+	if ( CTP_Password == NULL ) {
+		printf("环境变量CTP_Password没有设置\n");
+		return(0);
+	}
+	strcpy(userLoginField.Password,CTP_Password);
 
 	// 发出登陆请求
 	pTraderApi->ReqUserLogin(&userLoginField, requestID++);
