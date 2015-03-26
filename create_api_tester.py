@@ -33,22 +33,22 @@ def main():
 	responseMethodName = 'OnRsp%s' % apiName
 	CThostFtdcTraderSpi = cpphelper.getClass(ThostFtdcTraderApi_h,'CThostFtdcTraderSpi')
 	responseMethod = cpphelper.getClassMethod(CThostFtdcTraderSpi,'public',responseMethodName)
-	responseMethodParameters = cpphelper.getMethodParameters(responseMethod)
+	respParameters = cpphelper.getMethodParameters(responseMethod)
 
 	# 获取调用函数相关信息
 	requestMethodName = 'Req%s' % apiName
 	CThostFtdcTraderApi = cpphelper.getClass(ThostFtdcTraderApi_h,'CThostFtdcTraderApi')
 	requestMethod = cpphelper.getClassMethod(CThostFtdcTraderApi,'public',requestMethodName)
-	requestMethodParameters = cpphelper.getMethodParameters(requestMethod)	
+	reqParameters = cpphelper.getMethodParameters(requestMethod)	
 
 
 	# 读取
 	data = {
 		'apiName' : apiName,
 		'responseMethod' : responseMethod,
-		'responseMethodParameters' : responseMethodParameters,
+		'respParameters' : respParameters,
 		'requestMethod' : requestMethod,
-		'requestMethodParameters' : requestMethodParameters,
+		'reqParameters' : reqParameters,
 	}
 
 
