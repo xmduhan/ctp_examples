@@ -141,14 +141,19 @@ int main(){
 	//CThostFtdcQryInstrumentField qryInstrumentField;
 	//memset(&qryInstrumentField,0,sizeof(qryInstrumentField));	
 	//int result = pTraderApi->ReqQryInstrument(&qryInstrumentField,requestID++);
-	//sem_wait(&sem);
+	//sem_wait(&sem);	
 
 	// 调用API请求函数
-	pQryInstrument requestData;
+	CThostFtdcQryInstrumentField requestData;
+	// 确保没有初始化的数据不会被访问
+	memset(&requestData,0,sizeof(requestData));
+	// 为调用结构题设置参数信息
+	
+		
+
+	// 调用API,并等待响应函数返回
 	int result = pTraderApi->ReqQryInstrument(&requestData,requestID++);
-	
-	
-	
+	sem_wait(&sem);	
 
 	// 拷贝用户登录信息到登出信息
 	strcpy(userLogoutField.BrokerID,userLoginField.BrokerID);
@@ -158,9 +163,7 @@ int main(){
 	// 等待登出成功
 	sem_wait(&sem);
 
-
 	printf("主线程执行完毕!\n");
 	return(0);
-
 
 }

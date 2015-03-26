@@ -28,6 +28,9 @@ def main():
 	
 	# 读取相关cpp头文件	
 	ThostFtdcTraderApi_h = cpphelper.getCppHeader('api/ThostFtdcTraderApi.h',['TRADER_API_EXPORT'])
+	ThostFtdcUserApiStruct_h = cpphelper.getCppHeader('api/ThostFtdcUserApiStruct.h')
+	typedefDict = cpphelper.getTypedefDict('api/ThostFtdcUserApiDataType.h')
+
 	
 	# 获取响应函数相关信息
 	responseMethodName = 'OnRsp%s' % apiName
@@ -54,9 +57,14 @@ def main():
 		print '无法处理的请求API结构:%s' % methedDeclare
 		return(0)
 	
-	
-	# 
-	requestDataType = reqParameters[0]['raw_type']
+	# 读取请求类型的所有字段列表
+	requestDataStruct = cpphelper.getClass(ThostFtdcUserApiStruct_h,reqParameters[0]['raw_type'])
+	requestFields = cpphelper.getStructFields(requestDataStruct)
+	for field in requestFields:
+		typedef = typedefDict[field['type']]
+		field['original'] = typedef['type']
+		field['len'] = typedef['len']
+		print '%s %s %s %s %s' % (field['name'],field['type'],field['doxygen'],field['original'],field['len'])		
 	
 	
 	# 读取

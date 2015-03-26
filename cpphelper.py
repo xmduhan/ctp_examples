@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-
+import re
 import CppHeaderParser
 
 
@@ -59,6 +59,19 @@ def getMethodParameters(method):
 	'''
 	return [parameter for parameter in method['parameters'] ]
 
+
+def getTypedefDict(filename):
+	'''
+	从一个C++头文件中获取所有的typedef数据
+	filename 要读取的文件名称
+	返回  一个typedef信息字典，其格式为:
+	'''
+	pattern = r'\s*typedef\s+(?P<type>\w+(\s+\*\s+)*)\s+(?P<name>\w+)\s*(\[\s*(?P<len>\w+)\s*\]){0,1}\s*;'
+	regex = re.compile(pattern)
+	with open(filename) as f : 
+		header = f.read()
+	typedefDict = {m.groupdict()['name']:m.groupdict() for m in regex.finditer(header)}
+	return typedefDict
 
 
 
