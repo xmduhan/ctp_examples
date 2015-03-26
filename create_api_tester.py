@@ -40,8 +40,25 @@ def main():
 	CThostFtdcTraderApi = cpphelper.getClass(ThostFtdcTraderApi_h,'CThostFtdcTraderApi')
 	requestMethod = cpphelper.getClassMethod(CThostFtdcTraderApi,'public',requestMethodName)
 	reqParameters = cpphelper.getMethodParameters(requestMethod)	
-
-
+	
+	# 检查请求函数的参数格式是否符合预期
+	methedDeclare = '%s(%s)' % (requestMethod['name'],
+		','.join('%s %s' % (parameter['type'],parameter['name']) for parameter in reqParameters))
+	if len(reqParameters) != 2 : 
+		print '无法处理的请求API结构:%s' % methedDeclare
+		return(0)
+	if reqParameters[1]['name'] != 'nRequestID' :
+		print '无法处理的请求API结构:%s' % methedDeclare
+		return(0) 
+	if reqParameters[0]['pointer'] == False :
+		print '无法处理的请求API结构:%s' % methedDeclare
+		return(0)
+	
+	
+	# 
+	requestDataType = reqParameters[0]['raw_type']
+	
+	
 	# 读取
 	data = {
 		'apiName' : apiName,

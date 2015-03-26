@@ -26,8 +26,9 @@ CThostFtdcReqUserLoginField userLoginField;
 CThostFtdcUserLogoutField userLogoutField;
 // 线程同步标志
 sem_t sem;
+
 // 合约查询结构
-CThostFtdcQryInstrumentField qryInstrumentField;
+
 // requestID
 int requestID = 0;
 
@@ -89,8 +90,13 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		//}	
 	//}
 
-	virtual {{ responseMethod['returns'] }} {{ responseMethod['name'] }}({% for parameter in respParameters %}
-		{{ parameter['type'] }} {{ parameter['name'] }}{% if not loop.last %},{% endif %}{% endfor %}){
+	virtual {{ responseMethod['returns'] }} {{ responseMethod['name'] }}({% 
+		for parameter in respParameters %}
+		{{ 	parameter['type'] }} {{ parameter['name'] }}{% 
+			if not loop.last 
+				%},{% 
+			endif %}{% 
+		endfor %}){
 
 	}
 
@@ -133,10 +139,18 @@ int main(){
 	// 等待登录成功消息
 	sem_wait(&sem);
 
-	// 查询合约
-	memset(&qryInstrumentField,0,sizeof(qryInstrumentField));
-	int result = pTraderApi->ReqQryInstrument(&qryInstrumentField,requestID++);
-	sem_wait(&sem);
+	// 查询合约	
+	//CThostFtdcQryInstrumentField qryInstrumentField;
+	//memset(&qryInstrumentField,0,sizeof(qryInstrumentField));	
+	//int result = pTraderApi->ReqQryInstrument(&qryInstrumentField,requestID++);
+	//sem_wait(&sem);
+
+	// 调用API请求函数
+	{{reqParameters[0]['name']}} requestData;
+	int result = pTraderApi->{{ requestMethod['name'] }}(&requestData,requestID++);
+	
+	
+	
 
 	// 拷贝用户登录信息到登出信息
 	strcpy(userLogoutField.BrokerID,userLoginField.BrokerID);
