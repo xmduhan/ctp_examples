@@ -69,6 +69,12 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		}
 	}
 
+	// 错误信息响应方法
+	virtual void OnRspError
+		(CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){		
+		printf("OnRspError():被执行...\n");
+	}
+
 	// 查询合约结果响应
 	//virtual void OnRspQryInstrument
 	//	(ThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo,int nRequestID, bool bIsLast) {
@@ -89,9 +95,24 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 			{{ 	parameter['type'] }} {{ parameter['name'] -}}
 			{% if not loop.last	%},{% endif %}
 		{% endfor -%}
-	){
-		
+	){		
 		printf("{{ responseMethod['name'] }}():被执行...\n");
+		{{respParameters[0]['raw_type']}} responseData;
+		// 读取返回信息,并做编码转化
+		{% for field in responseFields -%}
+			{{field['doxygen'].decode('utf8')}} {{ field['original'] -}} 
+			{% if field['len'] %}[{{  field['len'] }}]{% endif %}
+			{% if field['original'] == 'char' and field['len'] != None -%}
+				strcpy(responseData.{{ field['name'] }},"");
+			{% elif field['original'] == 'char' and field['len'] == None -%}
+				responseData.{{ field['name'] }} = '0';
+			{% elif field['original'] != 'char' and field['len'] == None -%}
+				responseData.{{ field['name'] }} = 0;
+			{% else -%}
+				//responseData.{{ field['name'] }} = ;
+			{% endif -%}
+		{% endfor %}		
+		
 		// 如果响应函数已经返回最后一个信息
 		if(bIsLast){
 			// 通知主过程，响应函数将结束
@@ -164,6 +185,8 @@ int main(){
 		{{field['doxygen'].decode('utf8')}}
 		{% if field['original'] == 'char' and field['len'] != None -%}
 			strcpy(requestData.{{ field['name'] }},"");
+		{% elif field['original'] == 'char' and field['len'] == None -%}
+			requestData.{{ field['name'] }} = '0';
 		{% elif field['original'] != 'char' and field['len'] == None -%}
 			requestData.{{ field['name'] }} = 0;
 		{% else -%}

@@ -69,6 +69,12 @@ public:
         }
     }
 
+    // 错误信息响应方法
+    virtual void OnRspError
+    (CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
+        printf("OnRspError():被执行...\n");
+    }
+
     // 查询合约结果响应
     //virtual void OnRspQryInstrument
     //	(ThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo,int nRequestID, bool bIsLast) {
@@ -90,8 +96,63 @@ public:
         int nRequestID,
         bool bIsLast
     ) {
-
         printf("OnRspQryInstrument():被执行...\n");
+        CThostFtdcInstrumentField responseData;
+        // 读取返回信息,并做编码转化
+        ///合约代码 char[31]
+        strcpy(responseData.InstrumentID,"");
+        ///交易所代码 char[9]
+        strcpy(responseData.ExchangeID,"");
+        ///合约名称 char[21]
+        strcpy(responseData.InstrumentName,"");
+        ///合约在交易所的代码 char[31]
+        strcpy(responseData.ExchangeInstID,"");
+        ///产品代码 char[31]
+        strcpy(responseData.ProductID,"");
+        ///产品类型 char
+        responseData.ProductClass = '0';
+        ///交割年份 int
+        responseData.DeliveryYear = 0;
+        ///交割月 int
+        responseData.DeliveryMonth = 0;
+        ///市价单最大下单量 int
+        responseData.MaxMarketOrderVolume = 0;
+        ///市价单最小下单量 int
+        responseData.MinMarketOrderVolume = 0;
+        ///限价单最大下单量 int
+        responseData.MaxLimitOrderVolume = 0;
+        ///限价单最小下单量 int
+        responseData.MinLimitOrderVolume = 0;
+        ///合约数量乘数 int
+        responseData.VolumeMultiple = 0;
+        ///最小变动价位 double
+        responseData.PriceTick = 0;
+        ///创建日 char[9]
+        strcpy(responseData.CreateDate,"");
+        ///上市日 char[9]
+        strcpy(responseData.OpenDate,"");
+        ///到期日 char[9]
+        strcpy(responseData.ExpireDate,"");
+        ///开始交割日 char[9]
+        strcpy(responseData.StartDelivDate,"");
+        ///结束交割日 char[9]
+        strcpy(responseData.EndDelivDate,"");
+        ///合约生命周期状态 char
+        responseData.InstLifePhase = '0';
+        ///当前是否交易 int
+        responseData.IsTrading = 0;
+        ///持仓类型 char
+        responseData.PositionType = '0';
+        ///持仓日期类型 char
+        responseData.PositionDateType = '0';
+        ///多头保证金率 double
+        responseData.LongMarginRatio = 0;
+        ///空头保证金率 double
+        responseData.ShortMarginRatio = 0;
+        ///是否使用大额单边保证金算法 char
+        responseData.MaxMarginSideAlgorithm = '0';
+
+
         // 如果响应函数已经返回最后一个信息
         if(bIsLast) {
             // 通知主过程，响应函数将结束
