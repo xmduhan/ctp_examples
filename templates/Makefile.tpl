@@ -8,4 +8,4 @@ all : *.cpp
 
 
 clean :
-	rm -f *.o rm *.out *.con  {{ apiName }}
+	rm -f *.o rm *.out *.con *.orig {{ apiName }}

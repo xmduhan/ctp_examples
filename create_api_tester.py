@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 
 import sys
+import os
 import cpphelper
 from jinja2 import Environment, FileSystemLoader
 from os import path
@@ -85,8 +86,10 @@ def main():
 	source = env.get_template('source.tpl.cpp')
 	sourcePath = path.join(apiName,'%s.cpp' % apiName)
 	with open(sourcePath, 'w') as f :
-		f.write(source.render(**data).encode('utf-8'))	
-	
+		# 间模板生成到文件
+		f.write(source.render(**data).encode('utf-8'))
+	# 使用astyle对文件进行格式化	
+	os.system('astyle %s' % sourcePath)	
 	
 	# 生成make文件
 	makefile = env.get_template('Makefile.tpl')

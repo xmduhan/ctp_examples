@@ -17,18 +17,12 @@
 // 字符串编码转化
 #include <code_convert.h>
 
-
-// 服务器地址
-char * serverAddress = (char *)"tcp://101.231.96.18:51205";
 // 登录请求结构体
 CThostFtdcReqUserLoginField userLoginField;
 // 用户请求结构体
 CThostFtdcUserLogoutField userLogoutField;
 // 线程同步标志
 sem_t sem;
-
-// 合约查询结构
-
 // requestID
 int requestID = 0;
 
@@ -38,15 +32,15 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 	public:
 
     CTraderHandler(){
-        printf("CTraderHandler:called.\n");
+        printf("CTraderHandler():被执行...\n");
     }
 
 	// 允许登录事件
     virtual void OnFrontConnected() {
 		static int i = 0;
+		printf("OnFrontConnected():被执行...\n");
 		// 在登出后系统会重新调用OnFrontConnected，这里简单判断并忽略第1次之后的所有调用。
 		if (i++==0) {
-			printf("OnFrontConnected:called.\n");
 			sem_post(&sem);
 		}
     }
@@ -54,7 +48,7 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 	// 登录结果响应
     virtual void OnRspUserLogin(CThostFtdcRspUserLoginField *pRspUserLogin,
     	CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast){
-        printf("OnRspUserLogin:called\n");
+        printf("OnRspUserLogin():被执行...\n");
 		if (pRspInfo->ErrorID == 0) {
 			printf("登录成功!\n");
 			sem_post(&sem);
@@ -66,7 +60,7 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 	// 登出结果响应
 	virtual void OnRspUserLogout(CThostFtdcUserLogoutField *pUserLogout,
 		CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-		printf("OnReqUserLogout:called\n");
+		printf("OnReqUserLogout():被执行...\n");
 		if (pRspInfo->ErrorID == 0) {
 			printf("登出成功!\n");
 			sem_post(&sem);
@@ -90,14 +84,19 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		//}	
 	//}
 
-	virtual {{ responseMethod['returns'] }} {{ responseMethod['name'] }}({% 
-		for parameter in respParameters %}
-		{{ 	parameter['type'] }} {{ parameter['name'] }}{% 
-			if not loop.last 
-				%},{% 
-			endif %}{% 
-		endfor %}){
-
+	virtual {{ responseMethod['returns'] }} {{ responseMethod['name'] }}(
+		{% for parameter in respParameters -%}
+			{{ 	parameter['type'] }} {{ parameter['name'] -}}
+			{% if not loop.last	%},{% endif %}
+		{% endfor -%}
+	){
+		
+		printf("{{ responseMethod['name'] }}():被执行...\n");
+		// 如果响应函数已经返回最后一个信息
+		if(bIsLast){
+			// 通知主过程，响应函数将结束
+			sem_post(&sem);
+		}	
 	}
 
 };
@@ -108,24 +107,15 @@ int main(){
 	// 初始化线程同步变量
 	sem_init(&sem,0,0);
 
-
-	// 创建TraderAPI和回调响应控制器的实例
-	CThostFtdcTraderApi *pTraderApi = CThostFtdcTraderApi::CreateFtdcTraderApi();
-	CTraderHandler traderHandler = CTraderHandler();
-	CTraderHandler * pTraderHandler = &traderHandler;
-	pTraderApi->RegisterSpi(pTraderHandler);
-
-	// 设置服务器地址
-	pTraderApi->RegisterFront(serverAddress);
-	// 链接交易系统
-	pTraderApi->Init();
-
-	// 等待服务器发出登录消息
-	sem_wait(&sem);
-
-	// 读取登录信息
+	// 从环境变量中读取登录信息
+	char * CTP_FrontAddress = getenv("CTP_FrontAddress");
+	if ( CTP_FrontAddress == NULL ){
+		printf("环境变量CTP_FrontAddress没有设置\n");
+		return(0);
+	}
+	
 	char * CTP_BrokerId = getenv("CTP_BrokerId");
-	if (CTP_BrokerId == NULL){
+	if ( CTP_BrokerId == NULL ){
 		printf("环境变量CTP_BrokerId没有设置\n");
 		return(0);
 	}
@@ -145,38 +135,48 @@ int main(){
 	}
 	strcpy(userLoginField.Password,CTP_Password);
 
+	// 创建TraderAPI和回调响应控制器的实例
+	CThostFtdcTraderApi *pTraderApi = CThostFtdcTraderApi::CreateFtdcTraderApi();
+	CTraderHandler traderHandler = CTraderHandler();
+	CTraderHandler * pTraderHandler = &traderHandler;
+	pTraderApi->RegisterSpi(pTraderHandler);
+
+	// 设置服务器地址
+	pTraderApi->RegisterFront(CTP_FrontAddress);
+	printf("CTP_FrontAddress=%s",CTP_FrontAddress);
+	// 链接交易系统
+	pTraderApi->Init();
+	// 等待服务器发出登录消息
+	sem_wait(&sem);
 	// 发出登陆请求
 	pTraderApi->ReqUserLogin(&userLoginField, requestID++);
-
 	// 等待登录成功消息
 	sem_wait(&sem);
 
-	// 查询合约	
-	//CThostFtdcQryInstrumentField qryInstrumentField;
-	//memset(&qryInstrumentField,0,sizeof(qryInstrumentField));	
-	//int result = pTraderApi->ReqQryInstrument(&qryInstrumentField,requestID++);
-	//sem_wait(&sem);	
+	////////////////////////////////////////////////////////////////////////////////////////////////
 
-	// 调用API请求函数
+	// 定义调用API的数据结构
 	{{reqParameters[0]['raw_type']}} requestData;
 	// 确保没有初始化的数据不会被访问
 	memset(&requestData,0,sizeof(requestData));
 	// 为调用结构题设置参数信息
-	{% for field in requestFields 
-		%}{{field['doxygen'].decode('utf8')}}
-	{%
-		if field['original'] == 'char' and field['len'] != None 
-	%}strcpy(requestData.{{ field['name'] }},"");{% 
-		elif field['original'] != 'char' and field['len'] == None 
-	%}requestData.{{ field['name'] }} = 0;{% 
-		else 
-	%}//requestData.{{ field['name'] }} = ;{% 
-		endif %}
+	{% for field in requestFields -%}
+		{{field['doxygen'].decode('utf8')}}
+		{% if field['original'] == 'char' and field['len'] != None -%}
+			strcpy(requestData.{{ field['name'] }},"");
+		{% elif field['original'] != 'char' and field['len'] == None -%}
+			requestData.{{ field['name'] }} = 0;
+		{% else -%}
+			//requestData.{{ field['name'] }} = ;
+		{% endif -%}
 	{% endfor %}		
 
 	// 调用API,并等待响应函数返回
 	int result = pTraderApi->{{ requestMethod['name'] }}(&requestData,requestID++);
 	sem_wait(&sem);	
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////
+	
 
 	// 拷贝用户登录信息到登出信息
 	strcpy(userLogoutField.BrokerID,userLoginField.BrokerID);

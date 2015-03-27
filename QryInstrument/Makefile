@@ -8,4 +8,4 @@ all : *.cpp
 
 
 clean :
-	rm -f *.o rm *.out *.con  QryInstrument
+	rm -f *.o rm *.out *.con *.orig QryInstrument
