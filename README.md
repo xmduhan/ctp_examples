@@ -6,6 +6,7 @@ CTP API 使用范例
 
 
 - 使用前需要设置环境变量
+export CTP_FrontAddress="tcp://x.x.x.x:51205"
 export CTP_BrokerId=xxxxxx
 export CTP_UserId=xxxxxxxx
 export CTP_Password=xxxxxx
@@ -15,4 +16,10 @@ python create_api_tester.py API名称
 
 
 其中API名称形如QryTradingAccount，对应的请求函数为ReqQryTradingAccount，对应的相应函数为OnRspQryTradingAccount。
+
+
+
+
+
+
 
