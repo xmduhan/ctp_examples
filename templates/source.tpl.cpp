@@ -75,21 +75,7 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		printf("OnRspError():被执行...\n");
 	}
 
-	// 查询合约结果响应
-	//virtual void OnRspQryInstrument
-	//	(ThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo,int nRequestID, bool bIsLast) {
-		//static int i=0;
-		//char InstrumentName[100];
-		//codeConvert((char *)"GBK",(char*)"UTF8",pInstrument->InstrumentName,InstrumentName,sizeof(InstrumentName));			
-		//printf("InstrumentID=%s,ExchangeID=%s,InstrumentName=%s\n",
-		//pInstrument->InstrumentID,pInstrument->ExchangeID,InstrumentName);
-		//i++;
-		//if(bIsLast){
-		//	printf("一共有%d合约可供交易\n",i);
-		//	sem_post(&sem);
-		//}	
-	//}
-
+	{{ responseMethod['doxygen'].decode('utf8') }}
 	virtual {{ responseMethod['returns'] }} {{ responseMethod['name'] }}(
 		{% for parameter in respParameters -%}
 			{{ 	parameter['type'] }} {{ parameter['name'] -}}
@@ -97,17 +83,19 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		{% endfor -%}
 	){		
 		printf("{{ responseMethod['name'] }}():被执行...\n");
-		{{respParameters[0]['raw_type']}} responseData;
+		{# {{respParameters[0]['raw_type']}} responseData; -#}
 		// 读取返回信息,并做编码转化
 		{% for field in responseFields -%}
 			{{field['doxygen'].decode('utf8')}} {{ field['original'] -}} 
-			{% if field['len'] %}[{{  field['len'] }}]{% endif %}
+			{% if field['len'] %}[{{ field['len'] }}]{% endif %}
 			{% if field['original'] == 'char' and field['len'] != None -%}
-				strcpy(responseData.{{ field['name'] }},"");
+				{{field['original']}} {{field['name']}}[{{ field['len'] | int * 3 }}];
+				{# strcpy({{ field['name'] }},{{ respParameters[0]['name'] }}->{{ field['name'] }}); -#}
+				gbk2utf8({{ respParameters[0]['name'] }}->{{ field['name'] }},{{ field['name'] }},sizeof({{ field['name'] }}));
 			{% elif field['original'] == 'char' and field['len'] == None -%}
-				responseData.{{ field['name'] }} = '0';
+				{{field['original']}} {{ field['name'] }} = {{ respParameters[0]['name'] }}->{{ field['name'] }};
 			{% elif field['original'] != 'char' and field['len'] == None -%}
-				responseData.{{ field['name'] }} = 0;
+				{{field['original']}} {{ field['name'] }} = {{ respParameters[0]['name'] }}->{{ field['name'] }};
 			{% else -%}
 				//responseData.{{ field['name'] }} = ;
 			{% endif -%}
@@ -175,7 +163,8 @@ int main(){
 	sem_wait(&sem);
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
-
+	{{requestMethod['doxygen'].decode('utf8')}} 
+	///////////////////////////////////////////////////////////////////////////////////////////////
 	// 定义调用API的数据结构
 	{{reqParameters[0]['raw_type']}} requestData;
 	// 确保没有初始化的数据不会被访问

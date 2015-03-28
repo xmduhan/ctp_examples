@@ -75,21 +75,7 @@ public:
         printf("OnRspError():被执行...\n");
     }
 
-    // 查询合约结果响应
-    //virtual void OnRspQryInstrument
-    //	(ThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo,int nRequestID, bool bIsLast) {
-    //static int i=0;
-    //char InstrumentName[100];
-    //codeConvert((char *)"GBK",(char*)"UTF8",pInstrument->InstrumentName,InstrumentName,sizeof(InstrumentName));
-    //printf("InstrumentID=%s,ExchangeID=%s,InstrumentName=%s\n",
-    //pInstrument->InstrumentID,pInstrument->ExchangeID,InstrumentName);
-    //i++;
-    //if(bIsLast){
-    //	printf("一共有%d合约可供交易\n",i);
-    //	sem_post(&sem);
-    //}
-    //}
-
+    ///请求查询合约响应
     virtual void OnRspQryInstrument(
         CThostFtdcInstrumentField * pInstrument,
         CThostFtdcRspInfoField * pRspInfo,
@@ -97,60 +83,69 @@ public:
         bool bIsLast
     ) {
         printf("OnRspQryInstrument():被执行...\n");
-        CThostFtdcInstrumentField responseData;
         // 读取返回信息,并做编码转化
         ///合约代码 char[31]
-        strcpy(responseData.InstrumentID,"");
+        char InstrumentID[93];
+        gbk2utf8(pInstrument->InstrumentID,InstrumentID,sizeof(InstrumentID));
         ///交易所代码 char[9]
-        strcpy(responseData.ExchangeID,"");
+        char ExchangeID[27];
+        gbk2utf8(pInstrument->ExchangeID,ExchangeID,sizeof(ExchangeID));
         ///合约名称 char[21]
-        strcpy(responseData.InstrumentName,"");
+        char InstrumentName[63];
+        gbk2utf8(pInstrument->InstrumentName,InstrumentName,sizeof(InstrumentName));
         ///合约在交易所的代码 char[31]
-        strcpy(responseData.ExchangeInstID,"");
+        char ExchangeInstID[93];
+        gbk2utf8(pInstrument->ExchangeInstID,ExchangeInstID,sizeof(ExchangeInstID));
         ///产品代码 char[31]
-        strcpy(responseData.ProductID,"");
+        char ProductID[93];
+        gbk2utf8(pInstrument->ProductID,ProductID,sizeof(ProductID));
         ///产品类型 char
-        responseData.ProductClass = '0';
+        char ProductClass = pInstrument->ProductClass;
         ///交割年份 int
-        responseData.DeliveryYear = 0;
+        int DeliveryYear = pInstrument->DeliveryYear;
         ///交割月 int
-        responseData.DeliveryMonth = 0;
+        int DeliveryMonth = pInstrument->DeliveryMonth;
         ///市价单最大下单量 int
-        responseData.MaxMarketOrderVolume = 0;
+        int MaxMarketOrderVolume = pInstrument->MaxMarketOrderVolume;
         ///市价单最小下单量 int
-        responseData.MinMarketOrderVolume = 0;
+        int MinMarketOrderVolume = pInstrument->MinMarketOrderVolume;
         ///限价单最大下单量 int
-        responseData.MaxLimitOrderVolume = 0;
+        int MaxLimitOrderVolume = pInstrument->MaxLimitOrderVolume;
         ///限价单最小下单量 int
-        responseData.MinLimitOrderVolume = 0;
+        int MinLimitOrderVolume = pInstrument->MinLimitOrderVolume;
         ///合约数量乘数 int
-        responseData.VolumeMultiple = 0;
+        int VolumeMultiple = pInstrument->VolumeMultiple;
         ///最小变动价位 double
-        responseData.PriceTick = 0;
+        double PriceTick = pInstrument->PriceTick;
         ///创建日 char[9]
-        strcpy(responseData.CreateDate,"");
+        char CreateDate[27];
+        gbk2utf8(pInstrument->CreateDate,CreateDate,sizeof(CreateDate));
         ///上市日 char[9]
-        strcpy(responseData.OpenDate,"");
+        char OpenDate[27];
+        gbk2utf8(pInstrument->OpenDate,OpenDate,sizeof(OpenDate));
         ///到期日 char[9]
-        strcpy(responseData.ExpireDate,"");
+        char ExpireDate[27];
+        gbk2utf8(pInstrument->ExpireDate,ExpireDate,sizeof(ExpireDate));
         ///开始交割日 char[9]
-        strcpy(responseData.StartDelivDate,"");
+        char StartDelivDate[27];
+        gbk2utf8(pInstrument->StartDelivDate,StartDelivDate,sizeof(StartDelivDate));
         ///结束交割日 char[9]
-        strcpy(responseData.EndDelivDate,"");
+        char EndDelivDate[27];
+        gbk2utf8(pInstrument->EndDelivDate,EndDelivDate,sizeof(EndDelivDate));
         ///合约生命周期状态 char
-        responseData.InstLifePhase = '0';
+        char InstLifePhase = pInstrument->InstLifePhase;
         ///当前是否交易 int
-        responseData.IsTrading = 0;
+        int IsTrading = pInstrument->IsTrading;
         ///持仓类型 char
-        responseData.PositionType = '0';
+        char PositionType = pInstrument->PositionType;
         ///持仓日期类型 char
-        responseData.PositionDateType = '0';
+        char PositionDateType = pInstrument->PositionDateType;
         ///多头保证金率 double
-        responseData.LongMarginRatio = 0;
+        double LongMarginRatio = pInstrument->LongMarginRatio;
         ///空头保证金率 double
-        responseData.ShortMarginRatio = 0;
+        double ShortMarginRatio = pInstrument->ShortMarginRatio;
         ///是否使用大额单边保证金算法 char
-        responseData.MaxMarginSideAlgorithm = '0';
+        char MaxMarginSideAlgorithm = pInstrument->MaxMarginSideAlgorithm;
 
 
         // 如果响应函数已经返回最后一个信息
@@ -215,7 +210,8 @@ int main() {
     sem_wait(&sem);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-
+    ///请求查询合约
+    ///////////////////////////////////////////////////////////////////////////////////////////////
     // 定义调用API的数据结构
     CThostFtdcQryInstrumentField requestData;
     // 确保没有初始化的数据不会被访问
