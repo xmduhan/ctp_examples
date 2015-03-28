@@ -22,10 +22,14 @@ def main():
 	apiName = sys.argv[1]
 	print '开始生成%s的接口测试代码:...' % apiName
 
-	# 测试使用
-	apiName = 'QryInstrument'
-
-
+	# 检查目录是否存在
+	#apiName = 'QryInstrument'
+	if path.exists(apiName):
+		print '同名(%s)目录(或文件)已经存在，请确认并修改其位置或重命名后再执行命令\n'
+		return(0)	
+	
+	# 创建目录
+	os.makedirs(apiName)	
 	
 	# 读取相关cpp头文件	
 	ThostFtdcTraderApi_h = cpphelper.getCppHeader('api/ThostFtdcTraderApi.h',['TRADER_API_EXPORT'])
