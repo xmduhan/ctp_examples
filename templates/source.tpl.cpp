@@ -84,24 +84,26 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 	){		
 		printf("{{ responseMethod['name'] }}():被执行...\n");
 		{# {{respParameters[0]['raw_type']}} responseData; -#}
-		// 读取返回信息,并做编码转化
-		{% for field in responseFields -%}
-			{{field['doxygen'].decode('utf8')}} {{ field['original'] -}} 
-			{% if field['len'] %}[{{ field['len'] }}]{% endif %}
-			{% if field['original'] == 'char' and field['len'] != None -%}
-				{{field['original']}} {{field['name']}}[{{ field['len'] | int * 3 }}];
-				{# strcpy({{ field['name'] }},{{ respParameters[0]['name'] }}->{{ field['name'] }}); -#}
-				gbk2utf8({{ respParameters[0]['name'] }}->{{ field['name'] }},{{ field['name'] }},sizeof({{ field['name'] }}));
-			{% elif field['original'] == 'char' and field['len'] == None -%}
-				{{field['original']}} {{ field['name'] }} = {{ respParameters[0]['name'] }}->{{ field['name'] }};
-			{% elif field['original'] != 'char' and field['len'] == None -%}
-				{{field['original']}} {{ field['name'] }} = {{ respParameters[0]['name'] }}->{{ field['name'] }};
-			{% else -%}
-				//responseData.{{ field['name'] }} = ;
-			{% endif -%}
-		{% endfor %}		
-		
-		// 如果响应函数已经返回最后一个信息
+		// 如果有返回结果读取返回信息
+		if ( {{respParameters[0]['name']}} != NULL ) {
+			// 读取返回信息,并做编码转化
+			{% for field in responseFields -%}
+				{{field['doxygen'].decode('utf8')}} {{ field['original'] -}} 
+				{% if field['len'] %}[{{ field['len'] }}]{% endif %}
+				{% if field['original'] == 'char' and field['len'] != None -%}
+					{{field['original']}} {{field['name']}}[{{ field['len'] | int * 3 }}];
+					{# strcpy({{ field['name'] }},{{ respParameters[0]['name'] }}->{{ field['name'] }}); -#}
+					gbk2utf8({{ respParameters[0]['name'] }}->{{ field['name'] }},{{ field['name'] }},sizeof({{ field['name'] }}));
+				{% elif field['original'] == 'char' and field['len'] == None -%}
+					{{field['original']}} {{ field['name'] }} = {{ respParameters[0]['name'] }}->{{ field['name'] }};
+				{% elif field['original'] != 'char' and field['len'] == None -%}
+					{{field['original']}} {{ field['name'] }} = {{ respParameters[0]['name'] }}->{{ field['name'] }};
+				{% else -%}
+					//responseData.{{ field['name'] }} = ;
+				{% endif -%}
+			{% endfor %}		
+		}
+		// 如果响应函数已经返回最后一条信息
 		if(bIsLast){
 			// 通知主过程，响应函数将结束
 			sem_post(&sem);

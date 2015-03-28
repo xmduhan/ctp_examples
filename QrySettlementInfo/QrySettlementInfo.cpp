@@ -83,25 +83,27 @@ public:
         bool bIsLast
     ) {
         printf("OnRspQrySettlementInfo():被执行...\n");
-        // 读取返回信息,并做编码转化
-        ///交易日 char[9]
-        char TradingDay[27];
-        gbk2utf8(pSettlementInfo->TradingDay,TradingDay,sizeof(TradingDay));
-        ///结算编号 int
-        int SettlementID = pSettlementInfo->SettlementID;
-        ///经纪公司代码 char[11]
-        char BrokerID[33];
-        gbk2utf8(pSettlementInfo->BrokerID,BrokerID,sizeof(BrokerID));
-        ///投资者代码 char[13]
-        char InvestorID[39];
-        gbk2utf8(pSettlementInfo->InvestorID,InvestorID,sizeof(InvestorID));
-        ///序号 int
-        int SequenceNo = pSettlementInfo->SequenceNo;
-        ///消息正文 char[501]
-        char Content[1503];
-        gbk2utf8(pSettlementInfo->Content,Content,sizeof(Content));
+        if ( pSettlementInfo != NULL ) {
+            // 读取返回信息,并做编码转化
+            ///交易日 char[9]
+            char TradingDay[27];
+            gbk2utf8(pSettlementInfo->TradingDay,TradingDay,sizeof(TradingDay));
+            ///结算编号 int
+            int SettlementID = pSettlementInfo->SettlementID;
+            ///经纪公司代码 char[11]
+            char BrokerID[33];
+            gbk2utf8(pSettlementInfo->BrokerID,BrokerID,sizeof(BrokerID));
+            ///投资者代码 char[13]
+            char InvestorID[39];
+            gbk2utf8(pSettlementInfo->InvestorID,InvestorID,sizeof(InvestorID));
+            ///序号 int
+            int SequenceNo = pSettlementInfo->SequenceNo;
+            ///消息正文 char[501]
+            char Content[1503];
+            gbk2utf8(pSettlementInfo->Content,Content,sizeof(Content));
 
 
+        }
         // 如果响应函数已经返回最后一个信息
         if(bIsLast) {
             // 通知主过程，响应函数将结束
