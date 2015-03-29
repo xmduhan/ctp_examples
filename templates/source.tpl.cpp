@@ -83,6 +83,16 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		{% endfor -%}
 	){		
 		printf("{{ responseMethod['name'] }}():被执行...\n");
+		
+		// 进程返回结果检查
+		if ( (pRspInfo) && (pRspInfo->ErrorID != 0) )  {
+			// typedef int TThostFtdcErrorIDType;
+			// typedef char TThostFtdcErrorMsgType[81];
+			char ErrorMsg[243];
+			gbk2utf8(pRspInfo->ErrorMsg,ErrorMsg,sizeof(ErrorMsg));
+			printf("{{responseMethod['name'] }}():出错:ErrorId=%d,ErrorMsg=%s\n",pRspInfo->ErrorID,ErrorMsg);
+		}				
+
 		{# {{respParameters[0]['raw_type']}} responseData; -#}
 		// 如果有返回结果读取返回信息
 		if ( {{respParameters[0]['name']}} != NULL ) {
@@ -108,6 +118,7 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 				{% endif -%}
 			{% endfor %}		
 		}
+		
 		// 如果响应函数已经返回最后一条信息
 		if(bIsLast){
 			// 通知主过程，响应函数将结束

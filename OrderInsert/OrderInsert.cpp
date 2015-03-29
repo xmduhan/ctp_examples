@@ -83,6 +83,16 @@ public:
         bool bIsLast
     ) {
         printf("OnRspOrderInsert():被执行...\n");
+
+        // 进程返回结果检查
+        if ( (pRspInfo) && (pRspInfo->ErrorID != 0) )  {
+            // typedef int TThostFtdcErrorIDType;
+            // typedef char TThostFtdcErrorMsgType[81];
+            char ErrorMsg[243];
+            gbk2utf8(pRspInfo->ErrorMsg,ErrorMsg,sizeof(ErrorMsg));
+            printf("OnRspOrderInsert():出错:ErrorId=%d,ErrorMsg=%s\n",pRspInfo->ErrorID,ErrorMsg);
+        }
+
         // 如果有返回结果读取返回信息
         if ( pInputOrder != NULL ) {
             // 读取返回信息,并做编码转化
@@ -193,6 +203,7 @@ public:
             int IsSwapOrder = pInputOrder->IsSwapOrder;
 
         }
+
         // 如果响应函数已经返回最后一条信息
         if(bIsLast) {
             // 通知主过程，响应函数将结束
