@@ -88,7 +88,7 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		if ( {{respParameters[0]['name']}} != NULL ) {
 			// 读取返回信息,并做编码转化
 			{% for field in responseFields -%}
-				{{field['doxygen'].decode('utf8')}} {{ field['original'] -}} 
+				{{field['doxygen'].decode('utf8')}} {{ field['type'] }} {{ field['original'] -}} 
 				{% if field['len'] %}[{{ field['len'] }}]{% endif %}
 				{% if field['original'] == 'char' and field['len'] != None -%}
 					{{field['original']}} {{field['name']}}[{{ field['len'] | int * 3 }}];
@@ -173,7 +173,8 @@ int main(){
 	memset(&requestData,0,sizeof(requestData));
 	// 为调用结构题设置参数信息
 	{% for field in requestFields -%}
-		{{field['doxygen'].decode('utf8')}}
+		{{field['doxygen'].decode('utf8')}} {{ field['type'] }} {{ field['original'] -}}
+        {% if field['len'] %}[{{ field['len'] }}]{% endif %}
 		{% if field['original'] == 'char' and field['len'] != None -%}
 			strcpy(requestData.{{ field['name'] }},"");
 		{% elif field['original'] == 'char' and field['len'] == None -%}

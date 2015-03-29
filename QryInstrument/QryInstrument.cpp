@@ -83,72 +83,74 @@ public:
         bool bIsLast
     ) {
         printf("OnRspQryInstrument():被执行...\n");
-        // 读取返回信息,并做编码转化
-        ///合约代码 char[31]
-        char InstrumentID[93];
-        gbk2utf8(pInstrument->InstrumentID,InstrumentID,sizeof(InstrumentID));
-        ///交易所代码 char[9]
-        char ExchangeID[27];
-        gbk2utf8(pInstrument->ExchangeID,ExchangeID,sizeof(ExchangeID));
-        ///合约名称 char[21]
-        char InstrumentName[63];
-        gbk2utf8(pInstrument->InstrumentName,InstrumentName,sizeof(InstrumentName));
-        ///合约在交易所的代码 char[31]
-        char ExchangeInstID[93];
-        gbk2utf8(pInstrument->ExchangeInstID,ExchangeInstID,sizeof(ExchangeInstID));
-        ///产品代码 char[31]
-        char ProductID[93];
-        gbk2utf8(pInstrument->ProductID,ProductID,sizeof(ProductID));
-        ///产品类型 char
-        char ProductClass = pInstrument->ProductClass;
-        ///交割年份 int
-        int DeliveryYear = pInstrument->DeliveryYear;
-        ///交割月 int
-        int DeliveryMonth = pInstrument->DeliveryMonth;
-        ///市价单最大下单量 int
-        int MaxMarketOrderVolume = pInstrument->MaxMarketOrderVolume;
-        ///市价单最小下单量 int
-        int MinMarketOrderVolume = pInstrument->MinMarketOrderVolume;
-        ///限价单最大下单量 int
-        int MaxLimitOrderVolume = pInstrument->MaxLimitOrderVolume;
-        ///限价单最小下单量 int
-        int MinLimitOrderVolume = pInstrument->MinLimitOrderVolume;
-        ///合约数量乘数 int
-        int VolumeMultiple = pInstrument->VolumeMultiple;
-        ///最小变动价位 double
-        double PriceTick = pInstrument->PriceTick;
-        ///创建日 char[9]
-        char CreateDate[27];
-        gbk2utf8(pInstrument->CreateDate,CreateDate,sizeof(CreateDate));
-        ///上市日 char[9]
-        char OpenDate[27];
-        gbk2utf8(pInstrument->OpenDate,OpenDate,sizeof(OpenDate));
-        ///到期日 char[9]
-        char ExpireDate[27];
-        gbk2utf8(pInstrument->ExpireDate,ExpireDate,sizeof(ExpireDate));
-        ///开始交割日 char[9]
-        char StartDelivDate[27];
-        gbk2utf8(pInstrument->StartDelivDate,StartDelivDate,sizeof(StartDelivDate));
-        ///结束交割日 char[9]
-        char EndDelivDate[27];
-        gbk2utf8(pInstrument->EndDelivDate,EndDelivDate,sizeof(EndDelivDate));
-        ///合约生命周期状态 char
-        char InstLifePhase = pInstrument->InstLifePhase;
-        ///当前是否交易 int
-        int IsTrading = pInstrument->IsTrading;
-        ///持仓类型 char
-        char PositionType = pInstrument->PositionType;
-        ///持仓日期类型 char
-        char PositionDateType = pInstrument->PositionDateType;
-        ///多头保证金率 double
-        double LongMarginRatio = pInstrument->LongMarginRatio;
-        ///空头保证金率 double
-        double ShortMarginRatio = pInstrument->ShortMarginRatio;
-        ///是否使用大额单边保证金算法 char
-        char MaxMarginSideAlgorithm = pInstrument->MaxMarginSideAlgorithm;
+        // 如果有返回结果读取返回信息
+        if ( pInstrument != NULL ) {
+            // 读取返回信息,并做编码转化
+            ///合约代码 TThostFtdcInstrumentIDType char[31]
+            char InstrumentID[93];
+            gbk2utf8(pInstrument->InstrumentID,InstrumentID,sizeof(InstrumentID));
+            ///交易所代码 TThostFtdcExchangeIDType char[9]
+            char ExchangeID[27];
+            gbk2utf8(pInstrument->ExchangeID,ExchangeID,sizeof(ExchangeID));
+            ///合约名称 TThostFtdcInstrumentNameType char[21]
+            char InstrumentName[63];
+            gbk2utf8(pInstrument->InstrumentName,InstrumentName,sizeof(InstrumentName));
+            ///合约在交易所的代码 TThostFtdcExchangeInstIDType char[31]
+            char ExchangeInstID[93];
+            gbk2utf8(pInstrument->ExchangeInstID,ExchangeInstID,sizeof(ExchangeInstID));
+            ///产品代码 TThostFtdcInstrumentIDType char[31]
+            char ProductID[93];
+            gbk2utf8(pInstrument->ProductID,ProductID,sizeof(ProductID));
+            ///产品类型 TThostFtdcProductClassType char
+            char ProductClass = pInstrument->ProductClass;
+            ///交割年份 TThostFtdcYearType int
+            int DeliveryYear = pInstrument->DeliveryYear;
+            ///交割月 TThostFtdcMonthType int
+            int DeliveryMonth = pInstrument->DeliveryMonth;
+            ///市价单最大下单量 TThostFtdcVolumeType int
+            int MaxMarketOrderVolume = pInstrument->MaxMarketOrderVolume;
+            ///市价单最小下单量 TThostFtdcVolumeType int
+            int MinMarketOrderVolume = pInstrument->MinMarketOrderVolume;
+            ///限价单最大下单量 TThostFtdcVolumeType int
+            int MaxLimitOrderVolume = pInstrument->MaxLimitOrderVolume;
+            ///限价单最小下单量 TThostFtdcVolumeType int
+            int MinLimitOrderVolume = pInstrument->MinLimitOrderVolume;
+            ///合约数量乘数 TThostFtdcVolumeMultipleType int
+            int VolumeMultiple = pInstrument->VolumeMultiple;
+            ///最小变动价位 TThostFtdcPriceType double
+            double PriceTick = pInstrument->PriceTick;
+            ///创建日 TThostFtdcDateType char[9]
+            char CreateDate[27];
+            gbk2utf8(pInstrument->CreateDate,CreateDate,sizeof(CreateDate));
+            ///上市日 TThostFtdcDateType char[9]
+            char OpenDate[27];
+            gbk2utf8(pInstrument->OpenDate,OpenDate,sizeof(OpenDate));
+            ///到期日 TThostFtdcDateType char[9]
+            char ExpireDate[27];
+            gbk2utf8(pInstrument->ExpireDate,ExpireDate,sizeof(ExpireDate));
+            ///开始交割日 TThostFtdcDateType char[9]
+            char StartDelivDate[27];
+            gbk2utf8(pInstrument->StartDelivDate,StartDelivDate,sizeof(StartDelivDate));
+            ///结束交割日 TThostFtdcDateType char[9]
+            char EndDelivDate[27];
+            gbk2utf8(pInstrument->EndDelivDate,EndDelivDate,sizeof(EndDelivDate));
+            ///合约生命周期状态 TThostFtdcInstLifePhaseType char
+            char InstLifePhase = pInstrument->InstLifePhase;
+            ///当前是否交易 TThostFtdcBoolType int
+            int IsTrading = pInstrument->IsTrading;
+            ///持仓类型 TThostFtdcPositionTypeType char
+            char PositionType = pInstrument->PositionType;
+            ///持仓日期类型 TThostFtdcPositionDateTypeType char
+            char PositionDateType = pInstrument->PositionDateType;
+            ///多头保证金率 TThostFtdcRatioType double
+            double LongMarginRatio = pInstrument->LongMarginRatio;
+            ///空头保证金率 TThostFtdcRatioType double
+            double ShortMarginRatio = pInstrument->ShortMarginRatio;
+            ///是否使用大额单边保证金算法 TThostFtdcMaxMarginSideAlgorithmType char
+            char MaxMarginSideAlgorithm = pInstrument->MaxMarginSideAlgorithm;
 
-
-        // 如果响应函数已经返回最后一个信息
+        }
+        // 如果响应函数已经返回最后一条信息
         if(bIsLast) {
             // 通知主过程，响应函数将结束
             sem_post(&sem);
@@ -217,13 +219,13 @@ int main() {
     // 确保没有初始化的数据不会被访问
     memset(&requestData,0,sizeof(requestData));
     // 为调用结构题设置参数信息
-    ///合约代码
+    ///合约代码 TThostFtdcInstrumentIDType char[31]
     strcpy(requestData.InstrumentID,"");
-    ///交易所代码
+    ///交易所代码 TThostFtdcExchangeIDType char[9]
     strcpy(requestData.ExchangeID,"");
-    ///合约在交易所的代码
+    ///合约在交易所的代码 TThostFtdcExchangeInstIDType char[31]
     strcpy(requestData.ExchangeInstID,"");
-    ///产品代码
+    ///产品代码 TThostFtdcInstrumentIDType char[31]
     strcpy(requestData.ProductID,"");
 
 
