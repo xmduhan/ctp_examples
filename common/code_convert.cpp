@@ -7,7 +7,8 @@ void codeConvert(char * from,char * to,char * src,char * dst,size_t dstSize){
 	sl = strlen(src);
 	dl = dstSize;
 	char * pIn = src;
-    char * pOut = dst;	
+    char * pOut = dst;
+	memset(dst,'\0',dstSize);	
 	iconv_t conv = iconv_open(to,from);
 	iconv(conv, &pIn, &sl, &pOut, &dl);
 	iconv_close(conv);

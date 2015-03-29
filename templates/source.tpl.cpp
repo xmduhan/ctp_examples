@@ -170,7 +170,6 @@ int main(){
 
 	// 设置服务器地址
 	pTraderApi->RegisterFront(CTP_FrontAddress);
-	printf("CTP_FrontAddress=%s",CTP_FrontAddress);
 	// 链接交易系统
 	pTraderApi->Init();
 	// 等待服务器发出登录消息
