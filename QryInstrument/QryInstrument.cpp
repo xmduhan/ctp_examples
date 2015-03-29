@@ -102,6 +102,11 @@ public:
             char ProductID[93];
             gbk2utf8(pInstrument->ProductID,ProductID,sizeof(ProductID));
             ///产品类型 TThostFtdcProductClassType char
+            //// THOST_FTDC_PC_Futures '1' 期货
+            //// THOST_FTDC_PC_Options '2' 期权
+            //// THOST_FTDC_PC_Combination '3' 组合
+            //// THOST_FTDC_PC_Spot '4' 即期
+            //// THOST_FTDC_PC_EFP '5' 期转现
             char ProductClass = pInstrument->ProductClass;
             ///交割年份 TThostFtdcYearType int
             int DeliveryYear = pInstrument->DeliveryYear;
@@ -135,18 +140,28 @@ public:
             char EndDelivDate[27];
             gbk2utf8(pInstrument->EndDelivDate,EndDelivDate,sizeof(EndDelivDate));
             ///合约生命周期状态 TThostFtdcInstLifePhaseType char
+            //// THOST_FTDC_IP_NotStart '0' 未上市
+            //// THOST_FTDC_IP_Started '1' 上市
+            //// THOST_FTDC_IP_Pause '2' 停牌
+            //// THOST_FTDC_IP_Expired '3' 到期
             char InstLifePhase = pInstrument->InstLifePhase;
             ///当前是否交易 TThostFtdcBoolType int
             int IsTrading = pInstrument->IsTrading;
             ///持仓类型 TThostFtdcPositionTypeType char
+            //// THOST_FTDC_PT_Net '1' 净持仓
+            //// THOST_FTDC_PT_Gross '2' 综合持仓
             char PositionType = pInstrument->PositionType;
             ///持仓日期类型 TThostFtdcPositionDateTypeType char
+            //// THOST_FTDC_PDT_UseHistory '1' 使用历史持仓
+            //// THOST_FTDC_PDT_NoUseHistory '2' 不使用历史持仓
             char PositionDateType = pInstrument->PositionDateType;
             ///多头保证金率 TThostFtdcRatioType double
             double LongMarginRatio = pInstrument->LongMarginRatio;
             ///空头保证金率 TThostFtdcRatioType double
             double ShortMarginRatio = pInstrument->ShortMarginRatio;
             ///是否使用大额单边保证金算法 TThostFtdcMaxMarginSideAlgorithmType char
+            //// THOST_FTDC_MMSA_NO '0' 不使用大额单边保证金算法
+            //// THOST_FTDC_MMSA_YES '1' 使用大额单边保证金算法
             char MaxMarginSideAlgorithm = pInstrument->MaxMarginSideAlgorithm;
 
         }

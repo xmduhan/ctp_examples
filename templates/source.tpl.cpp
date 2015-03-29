@@ -90,6 +90,11 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 			{% for field in responseFields -%}
 				{{field['doxygen'].decode('utf8')}} {{ field['type'] }} {{ field['original'] -}} 
 				{% if field['len'] %}[{{ field['len'] }}]{% endif %}
+				{% if field['enums'] -%}
+					{% for enum in field['enums'] -%}
+						//// {{enum['name']}} {{enum['value']}} {{enum['remark'].decode('utf8')}}
+					{% endfor -%}
+				{% endif -%}
 				{% if field['original'] == 'char' and field['len'] != None -%}
 					{{field['original']}} {{field['name']}}[{{ field['len'] | int * 3 }}];
 					{# strcpy({{ field['name'] }},{{ respParameters[0]['name'] }}->{{ field['name'] }}); -#}
@@ -175,6 +180,11 @@ int main(){
 	{% for field in requestFields -%}
 		{{field['doxygen'].decode('utf8')}} {{ field['type'] }} {{ field['original'] -}}
         {% if field['len'] %}[{{ field['len'] }}]{% endif %}
+		{% if field['enums'] -%}
+			{% for enum in field['enums'] -%}
+			//// {{enum['name']}} {{enum['value']}} {{enum['remark'].decode('utf8')}}
+			{% endfor -%}
+		{% endif -%}
 		{% if field['original'] == 'char' and field['len'] != None -%}
 			strcpy(requestData.{{ field['name'] }},"");
 		{% elif field['original'] == 'char' and field['len'] == None -%}

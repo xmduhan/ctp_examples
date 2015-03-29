@@ -73,6 +73,36 @@ def getTypedefDict(filename):
 	typedefDict = {m.groupdict()['name']:m.groupdict() for m in regex.finditer(header)}
 	return typedefDict
 
+def getEnumDict(filename):
+	'''
+	从一个c++头文件中获取所有的枚举类型的值
+	filename 要读取的文件名称
+	返回  一个枚举数据字段，
+		  其格式为{'类型名称':[{'name':'枚举名称1','value':'枚举对应值','remark':'说明'},...],...}
+
+	'''
+	# TODO 注意该函数功能并不通用，其基于CTP头文件的特性结构 
+	# 先读取所有的typedef定义
+	typedefs = getTypedefDict(filename)
+	# 定义正则表达式
+	definePattern  = r'///(?P<remark>\S+)\s+#define\s+(?P<name>\S+)\s+(?P<value>\S+)\s+'
+	defineRegex = re.compile(definePattern)
+	
+	# 读取对应的头文件信息
+	with open(filename) as f:
+		header =  f.read()
+	
+	# 为每个类型尝试寻找其对应枚举值(如果存在的话)
+	enumDict = {}
+	for tdname in typedefs:
+		enumPattern = r'T%s[\S\s]*?typedef\s*\S+\s+%s;' % (tdname[6:],tdname)
+		enumDefineStringList = re.findall(enumPattern ,header)
+		if enumDefineStringList :
+			enumDefineString= enumDefineStringList [0]
+			enumDict[tdname ] = [m.groupdict()for m in defineRegex .finditer(enumDefineString)]
+				 
+	return enumDict
+
 
 
 #def getMethodReturn(method):

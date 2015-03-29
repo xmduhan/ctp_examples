@@ -35,7 +35,7 @@ def main():
 	ThostFtdcTraderApi_h = cpphelper.getCppHeader('api/ThostFtdcTraderApi.h',['TRADER_API_EXPORT'])
 	ThostFtdcUserApiStruct_h = cpphelper.getCppHeader('api/ThostFtdcUserApiStruct.h')
 	typedefDict = cpphelper.getTypedefDict('api/ThostFtdcUserApiDataType.h')
-
+	enumDict = cpphelper.getEnumDict('api/ThostFtdcUserApiDataType.h')
 	
 	# 获取响应函数相关信息
 	responseMethodName = 'OnRsp%s' % apiName
@@ -68,7 +68,8 @@ def main():
 	for field in responseFields:
 		typedef = typedefDict[ field['type'] ]
 		field['original'] = typedef['type']
-		field['len'] = typedef['len']		
+		field['len'] = typedef['len']
+		field['enums'] = enumDict.get(field['type'])			
 		#print '%s %s %s %s %s' % (field['name'],field['type'],field['doxygen'],field['original'],field['len'])		
 
 	# 读取请求类型的所有字段列表和原始类型
@@ -78,6 +79,7 @@ def main():
 		typedef = typedefDict[ field['type'] ]
 		field['original'] = typedef['type']
 		field['len'] = typedef['len']
+		field['enums'] = enumDict.get(field['type'])
 		#print '%s %s %s %s %s' % (field['name'],field['type'],field['doxygen'],field['original'],field['len'])		
 	
 	# 生成模板所需的信息集
