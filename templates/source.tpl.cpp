@@ -14,8 +14,16 @@
 #include <semaphore.h>
 #include <unistd.h>
 
+// 定时器相关
+#include <signal.h>
+#include <sys/time.h>
+
+
 // 字符串编码转化
 #include <code_convert.h>
+
+
+
 
 // 登录请求结构体
 CThostFtdcReqUserLoginField userLoginField;
@@ -129,6 +137,29 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 };
 
 
+// 定时器控制函数
+void timeout_handler(int signalno){
+	// 定时控制步骤
+}
+
+// 初始化定时器
+void init_timer(void)
+{
+    // init sigaction
+    struct sigaction act;
+    act.sa_handler = timeout_handler;
+    act.sa_flags   = 0;
+    sigemptyset(&act.sa_mask);
+    sigaction(SIGPROF, &act, NULL);
+    // set timer 
+    struct itimerval val;
+    val.it_value.tv_sec = 1;
+    val.it_value.tv_usec = 0;
+    val.it_interval = val.it_value;
+    setitimer(ITIMER_PROF, &val, NULL);
+}
+
+
 int main(){
 
 	// 初始化线程同步变量
@@ -168,6 +199,17 @@ int main(){
 	CTraderHandler * pTraderHandler = &traderHandler;
 	pTraderApi->RegisterSpi(pTraderHandler);
 
+	// 订阅相关信息推送
+    //// THOST_TERT_RESTART:从本交易日开始重传
+    //// THOST_TERT_RESUME:从上次收到的续传
+    //// THOST_TERT_QUICK:只传送登录后私有流的内容
+	pTraderApi->SubscribePrivateTopic(THOST_TERT_RESUME);
+    // 订阅公共流
+    //// THOST_TERT_RESTART:从本交易日开始重传
+    //// THOST_TERT_RESUME:从上次收到的续传
+    //// THOST_TERT_QUICK:只传送登录后公共流的内容
+	pTraderApi->SubscribePublicTopic(THOST_TERT_RESUME);
+	
 	// 设置服务器地址
 	pTraderApi->RegisterFront(CTP_FrontAddress);
 	// 链接交易系统
