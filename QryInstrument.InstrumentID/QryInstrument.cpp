@@ -173,8 +173,9 @@ public:
             //// THOST_FTDC_MMSA_NO '0' 不使用大额单边保证金算法
             //// THOST_FTDC_MMSA_YES '1' 使用大额单边保证金算法
             char MaxMarginSideAlgorithm = pInstrument->MaxMarginSideAlgorithm;
-			
+
 			printf("InstrumentID=%s,ExchangeID=%s,InstrumentName=%s\n",InstrumentID,ExchangeID,InstrumentName);
+
         }
 
         // 如果响应函数已经返回最后一条信息
@@ -246,7 +247,7 @@ int main() {
     memset(&requestData,0,sizeof(requestData));
     // 为调用结构题设置参数信息
     ///合约代码 TThostFtdcInstrumentIDType char[31]
-    strcpy(requestData.InstrumentID,"");
+    strcpy(requestData.InstrumentID,"SR609C4900");
     ///交易所代码 TThostFtdcExchangeIDType char[9]
     strcpy(requestData.ExchangeID,"");
     ///合约在交易所的代码 TThostFtdcExchangeInstIDType char[31]
