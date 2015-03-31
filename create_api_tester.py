@@ -130,7 +130,7 @@ def main():
 		'onRtnOrderParameters' : onRtnOrderParameters,
 		'onRtnOrderFields' : onRtnOrderFields,
 		# 成交通知函数		
-		'nRtnTradeMethod' : nRtnTradeMethod,
+		'onRtnTradeMethod' : onRtnTradeMethod,
 		'onRtnTradeParameters' : onRtnTradeParameters,
 		'onRtnTradeFields' : onRtnTradeFields,
 	}

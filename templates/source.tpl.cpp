@@ -83,6 +83,42 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 		printf("OnRspError():被执行...\n");
 	}
 
+
+	//{{ onRtnOrderMethod['doxygen'].decode('utf8') }}
+    virtual {{ onRtnOrderMethod['returns'] }} {{ onRtnOrderMethod['name'] }}(
+        {% for parameter in onRtnOrderParameters -%}
+            {{  parameter['type'] }} {{ parameter['name'] -}}
+            {% if not loop.last %},{% endif %}
+        {% endfor -%}
+    ){
+		// 如果有返回结果读取返回信息
+        if ( {{onRtnOrderParameters[0]['name']}} != NULL ) {
+            // 读取返回信息,并做编码转化
+            {% for field in onRtnOrderFields -%}
+                {{field['doxygen'].decode('utf8')}} {{ field['type'] }} {{ field['original'] -}}
+                {% if field['len'] %}[{{ field['len'] }}]{% endif %}
+                {% if field['enums'] -%}
+                    {% for enum in field['enums'] -%}
+                        //// {{enum['name']}} {{enum['value']}} {{enum['remark'].decode('utf8')}}
+                    {% endfor -%}
+                {% endif -%}
+                {% if field['original'] == 'char' and field['len'] != None -%}
+                    {{field['original']}} {{field['name']}}[{{ field['len'] | int * 3 }}];
+                    {# strcpy({{ field['name'] }},{{ onRtnOrderParameters[0]['name'] }}->{{ field['name'] }}); -#}
+                    gbk2utf8({{ onRtnOrderParameters[0]['name'] }}->{{ field['name'] }},{{ field['name'] }},sizeof({{ field['name'] }}));
+                {% elif field['original'] == 'char' and field['len'] == None -%}
+                    {{field['original']}} {{ field['name'] }} = {{ onRtnOrderParameters[0]['name'] }}->{{ field['name'] }};
+                {% elif field['original'] != 'char' and field['len'] == None -%}
+                    {{field['original']}} {{ field['name'] }} = {{ onRtnOrderParameters[0]['name'] }}->{{ field['name'] }};
+                {% else -%}
+                    //responseData.{{ field['name'] }} = ;
+                {% endif -%}
+            {% endfor %}
+        }	
+
+	}
+
+
 	{{ responseMethod['doxygen'].decode('utf8') }}
 	virtual {{ responseMethod['returns'] }} {{ responseMethod['name'] }}(
 		{% for parameter in respParameters -%}
