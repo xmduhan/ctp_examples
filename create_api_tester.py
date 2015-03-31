@@ -16,10 +16,10 @@ def addEnumInfo(fields,typedefDict,enumDict):
 	返回  无返回信息直接作用在fields中
 	'''
 	for field in fields:
-        typedef = typedefDict[ field['type'] ]
-        field['original'] = typedef['type']
-        field['len'] = typedef['len']
-        field['enums'] = enumDict.get(field['type'])
+		typedef = typedefDict[ field['type'] ]
+		field['original'] = typedef['type']
+		field['len'] = typedef['len']
+		field['enums'] = enumDict.get(field['type'])
 
 
 
