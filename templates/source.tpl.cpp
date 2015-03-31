@@ -91,6 +91,7 @@ class CTraderHandler : public CThostFtdcTraderSpi{
             {% if not loop.last %},{% endif %}
         {% endfor -%}
     ){
+		printf("{{ onRtnOrderMethod['name'] }}():被执行...\n");
 		// 如果有返回结果读取返回信息
         if ( {{onRtnOrderParameters[0]['name']}} != NULL ) {
             // 读取返回信息,并做编码转化
@@ -111,12 +112,48 @@ class CTraderHandler : public CThostFtdcTraderSpi{
                 {% elif field['original'] != 'char' and field['len'] == None -%}
                     {{field['original']}} {{ field['name'] }} = {{ onRtnOrderParameters[0]['name'] }}->{{ field['name'] }};
                 {% else -%}
-                    //responseData.{{ field['name'] }} = ;
+                    {{ field['name'] }} = ;
                 {% endif -%}
             {% endfor %}
         }	
 
 	}
+
+	
+	//{{ onRtnTradeMethod['doxygen'].decode('utf8') }}
+    virtual {{ onRtnTradeMethod['returns'] }} {{ onRtnTradeMethod['name'] }}(
+        {% for parameter in onRtnTradeParameters -%}
+            {{  parameter['type'] }} {{ parameter['name'] -}}
+            {% if not loop.last %},{% endif %}
+        {% endfor -%}
+    ){
+		printf("{{ onRtnTradeMethod['name'] }}():被执行...\n");
+        // 如果有返回结果读取返回信息
+        if ( {{onRtnTradeParameters[0]['name']}} != NULL ) {
+            // 读取返回信息,并做编码转化
+            {% for field in onRtnTradeFields -%}
+                {{field['doxygen'].decode('utf8')}} {{ field['type'] }} {{ field['original'] -}}
+                {% if field['len'] %}[{{ field['len'] }}]{% endif %}
+                {% if field['enums'] -%}
+                    {% for enum in field['enums'] -%}
+                        //// {{enum['name']}} {{enum['value']}} {{enum['remark'].decode('utf8')}}
+                    {% endfor -%}
+                {% endif -%}
+                {% if field['original'] == 'char' and field['len'] != None -%}
+                    {{field['original']}} {{field['name']}}[{{ field['len'] | int * 3 }}];
+                    {# strcpy({{ field['name'] }},{{ onRtnTradeParameters[0]['name'] }}->{{ field['name'] }}); -#}
+                    gbk2utf8({{ onRtnTradeParameters[0]['name'] }}->{{ field['name'] }},{{ field['name'] }},sizeof({{ field['name'] }}));
+                {% elif field['original'] == 'char' and field['len'] == None -%}
+                    {{field['original']}} {{ field['name'] }} = {{ onRtnTradeParameters[0]['name'] }}->{{ field['name'] }};
+                {% elif field['original'] != 'char' and field['len'] == None -%}
+                    {{field['original']}} {{ field['name'] }} = {{ onRtnTradeParameters[0]['name'] }}->{{ field['name'] }};
+                {% else -%}
+                    //{{ field['name'] }} = ;
+                {% endif -%}
+            {% endfor %}
+        }
+
+    }
 
 
 	{{ responseMethod['doxygen'].decode('utf8') }}
@@ -158,7 +195,7 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 				{% elif field['original'] != 'char' and field['len'] == None -%}
 					{{field['original']}} {{ field['name'] }} = {{ respParameters[0]['name'] }}->{{ field['name'] }};
 				{% else -%}
-					//responseData.{{ field['name'] }} = ;
+					//{{ field['name'] }} = ;
 				{% endif -%}
 			{% endfor %}		
 		}
