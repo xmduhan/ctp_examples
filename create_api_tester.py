@@ -98,33 +98,16 @@ def main():
 	responseDataStruct = cpphelper.getClass(ThostFtdcUserApiStruct_h,respParameters[0]['raw_type'])
 	responseFields = cpphelper.getStructFields(responseDataStruct)
 	addEnumInfo(responseFields,typedefDict,enumDict)
-	#for field in responseFields:
-	#	typedef = typedefDict[ field['type'] ]
-	#	field['original'] = typedef['type']
-	#	field['len'] = typedef['len']
-	#	field['enums'] = enumDict.get(field['type'])			
-	#	#print '%s %s %s %s %s' % (field['name'],field['type'],field['doxygen'],field['original'],field['len'])		
 
 	# 读取请求类型的所有字段列表和原始类型
 	requestDataStruct = cpphelper.getClass(ThostFtdcUserApiStruct_h,reqParameters[0]['raw_type'])
 	requestFields = cpphelper.getStructFields(requestDataStruct)
 	addEnumInfo(requestFields,typedefDict,enumDict)
-	#for field in requestFields:
-	#	typedef = typedefDict[ field['type'] ]
-	#	field['original'] = typedef['type']
-	#	field['len'] = typedef['len']
-	#	field['enums'] = enumDict.get(field['type'])
-	#	#print '%s %s %s %s %s' % (field['name'],field['type'],field['doxygen'],field['original'],field['len'])		
 
 	# 读取报单通知返回结构的所有字段列表和原始类型
 	onRtnOrderDataStruct = cpphelper.getClass(ThostFtdcUserApiStruct_h,onRtnOrderParameters[0]['raw_type'])
 	onRtnOrderFields = cpphelper.getStructFields(onRtnOrderDataStruct)
 	addEnumInfo(onRtnOrderFields,typedefDict,enumDict)
-	#for field in onRtnOrderFields:
-	#	typedef = typedefDict[ field['type'] ]
-    #    field['original'] = typedef['type']
-    #    field['len'] = typedef['len']
-    #    field['enums'] = enumDict.get(field['type'])
 	
 	# 读取成交通知返回结构的所有字段列表和原始类型
 	onRtnTradeDataStruct = cpphelper.getClass(ThostFtdcUserApiStruct_h,onRtnTradeParameters[0]['raw_type'])		
@@ -134,12 +117,22 @@ def main():
 	# 生成模板所需的信息集
 	data = {
 		'apiName' : apiName,
+		# 响应函数
 		'responseMethod' : responseMethod,
 		'respParameters' : respParameters,
 		'responseFields' : responseFields,
+		# 请求函数
 		'requestMethod' : requestMethod,
 		'reqParameters' : reqParameters,
 		'requestFields' : requestFields,
+		# 报单通知函数
+		'onRtnOrderMethod' : onRtnOrderMethod,
+		'onRtnOrderParameters' : onRtnOrderParameters,
+		'onRtnOrderFields' : onRtnOrderFields,
+		# 成交通知函数		
+		'nRtnTradeMethod' : nRtnTradeMethod,
+		'onRtnTradeParameters' : onRtnTradeParameters,
+		'onRtnTradeFields' : onRtnTradeFields,
 	}
 
 
