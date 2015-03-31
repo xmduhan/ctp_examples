@@ -72,12 +72,12 @@ def main():
 	
 	# 读取报单通知回调函数信息
 	onRtnOrderMethodName = 'OnRtnOrder'
-	onRtnOrderMethod = cpphelper.getClass(ThostFtdcTraderApi_h,onRtnOrderMethodName)
+	onRtnOrderMethod = cpphelper.getClassMethod(CThostFtdcTraderSpi,'public',onRtnOrderMethodName)
 	onRtnOrderParameters =cpphelper.getMethodParameters(onRtnOrderMethod)
 	
 	# 读取成交通知回调函数信息
 	onRtnTradeMethodName = 'OnRtnTrade'
-	onRtnTradeMethod = cpphelper.getClass(ThostFtdcTraderApi_h,onRtnTradeMethodName)
+	onRtnTradeMethod = cpphelper.getClassMethod(CThostFtdcTraderSpi,'public',onRtnTradeMethodName)
 	onRtnTradeParameters =cpphelper.getMethodParameters(onRtnTradeMethod)	
 
 
@@ -129,7 +129,7 @@ def main():
 	# 读取成交通知返回结构的所有字段列表和原始类型
 	onRtnTradeDataStruct = cpphelper.getClass(ThostFtdcUserApiStruct_h,onRtnTradeParameters[0]['raw_type'])		
 	onRtnTradeFields = cpphelper.getStructFields(onRtnTradeDataStruct)
-	addEnumInfo(onRtnTradeFields,typedefDict,enumDict):
+	addEnumInfo(onRtnTradeFields,typedefDict,enumDict)
 	
 	# 生成模板所需的信息集
 	data = {
