@@ -202,7 +202,9 @@ public:
 
 			printf("TradingDay=%s,",TradingDay);    // 交易日
             printf("InstrumentID=%s,",InstrumentID);  // 合约代码
-            printf("LastPrice=%f\n",LastPrice);  // 最新价
+            printf("LastPrice=%f,",LastPrice);  // 最新价
+            printf("UpdateTime=%s,",UpdateTime);  // 最新价
+            printf("Volume=%d\n",Volume);  // 最新价
 
         }
 
@@ -230,7 +232,7 @@ void timeout_handler(int signalno) {
     memset(&requestData,0,sizeof(requestData));
     // 为调用结构题设置参数信息
     ///合约代码 TThostFtdcInstrumentIDType char[31]
-    strcpy(requestData.InstrumentID,"SR609C4900");
+    strcpy(requestData.InstrumentID,"IF1504");
     // 调用API
     int result = pTraderApi->ReqQryDepthMarketData(&requestData,requestID++);
     /////////////////////////////////////////////////////////////////////////////////////////////////

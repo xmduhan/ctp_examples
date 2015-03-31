@@ -35,8 +35,14 @@ def main():
 	ThostFtdcTraderApi_h = cpphelper.getCppHeader('api/ThostFtdcTraderApi.h',['TRADER_API_EXPORT'])
 	ThostFtdcUserApiStruct_h = cpphelper.getCppHeader('api/ThostFtdcUserApiStruct.h')
 	typedefDict = cpphelper.getTypedefDict('api/ThostFtdcUserApiDataType.h')
-	enumDict = cpphelper.getEnumDict('api/ThostFtdcUserApiDataType.h')
+	enumDict = cpphelper.getEnumDict('api/ThostFtdcUserApiDataType.h')	
 	
+	# 将TThostFtdcOffsetFlagType类型数据映射到TThostFtdcCombOffsetFlagType
+	# TThostFtdcCombOffsetFlagType表示多个TThostFtdcOffsetFlagType位的组合其实际字段含义在TThostFtdcOffsetFlagType中说明
+	enumDict['TThostFtdcCombOffsetFlagType'] =  enumDict['TThostFtdcOffsetFlagType']
+	# 情况同TThostFtdcCombOffsetFlagType
+	enumDict['TThostFtdcCombHedgeFlagType'] =  enumDict['TThostFtdcHedgeFlagType']
+
 	# 获取响应函数相关信息
 	responseMethodName = 'OnRsp%s' % apiName
 	CThostFtdcTraderSpi = cpphelper.getClass(ThostFtdcTraderApi_h,'CThostFtdcTraderSpi')
