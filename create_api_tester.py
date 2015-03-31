@@ -7,6 +7,21 @@ from jinja2 import Environment, FileSystemLoader
 from os import path
 
 
+def addEnumInfo(fields,typedefDict,enumDict):
+	'''
+	对一个field列表增加枚举信息
+	fields field的列表
+	typedefDict 类型定义字典,通过调用cpphelper.getTypedefDict获得
+	enumDict 枚举类型字典，通过cpphelper.getEnumDict获得
+	返回  无返回信息直接作用在fields中
+	'''
+	for field in fields:
+        typedef = typedefDict[ field['type'] ]
+        field['original'] = typedef['type']
+        field['len'] = typedef['len']
+        field['enums'] = enumDict.get(field['type'])
+
+
 
 def main():
 	'''
@@ -55,6 +70,17 @@ def main():
 	requestMethod = cpphelper.getClassMethod(CThostFtdcTraderApi,'public',requestMethodName)
 	reqParameters = cpphelper.getMethodParameters(requestMethod)	
 	
+	# 读取报单通知回调函数信息
+	onRtnOrderMethodName = 'OnRtnOrder'
+	onRtnOrderMethod = cpphelper.getClass(ThostFtdcTraderApi_h,onRtnOrderMethodName)
+	onRtnOrderParameters =cpphelper.getMethodParameters(onRtnOrderMethod)
+	
+	# 读取成交通知回调函数信息
+	onRtnTradeMethodName = 'OnRtnTrade'
+	onRtnTradeMethod = cpphelper.getClass(ThostFtdcTraderApi_h,onRtnTradeMethodName)
+	onRtnTradeParameters =cpphelper.getMethodParameters(onRtnTradeMethod)	
+
+
 	# 检查请求函数的参数格式是否符合预期
 	methedDeclare = '%s(%s)' % (requestMethod['name'],
 		','.join('%s %s' % (parameter['type'],parameter['name']) for parameter in reqParameters))
@@ -71,22 +97,39 @@ def main():
 	# 读取响应函数的返回的数据类型的所有字段
 	responseDataStruct = cpphelper.getClass(ThostFtdcUserApiStruct_h,respParameters[0]['raw_type'])
 	responseFields = cpphelper.getStructFields(responseDataStruct)
-	for field in responseFields:
-		typedef = typedefDict[ field['type'] ]
-		field['original'] = typedef['type']
-		field['len'] = typedef['len']
-		field['enums'] = enumDict.get(field['type'])			
-		#print '%s %s %s %s %s' % (field['name'],field['type'],field['doxygen'],field['original'],field['len'])		
+	addEnumInfo(responseFields,typedefDict,enumDict)
+	#for field in responseFields:
+	#	typedef = typedefDict[ field['type'] ]
+	#	field['original'] = typedef['type']
+	#	field['len'] = typedef['len']
+	#	field['enums'] = enumDict.get(field['type'])			
+	#	#print '%s %s %s %s %s' % (field['name'],field['type'],field['doxygen'],field['original'],field['len'])		
 
 	# 读取请求类型的所有字段列表和原始类型
 	requestDataStruct = cpphelper.getClass(ThostFtdcUserApiStruct_h,reqParameters[0]['raw_type'])
 	requestFields = cpphelper.getStructFields(requestDataStruct)
-	for field in requestFields:
-		typedef = typedefDict[ field['type'] ]
-		field['original'] = typedef['type']
-		field['len'] = typedef['len']
-		field['enums'] = enumDict.get(field['type'])
-		#print '%s %s %s %s %s' % (field['name'],field['type'],field['doxygen'],field['original'],field['len'])		
+	addEnumInfo(requestFields,typedefDict,enumDict)
+	#for field in requestFields:
+	#	typedef = typedefDict[ field['type'] ]
+	#	field['original'] = typedef['type']
+	#	field['len'] = typedef['len']
+	#	field['enums'] = enumDict.get(field['type'])
+	#	#print '%s %s %s %s %s' % (field['name'],field['type'],field['doxygen'],field['original'],field['len'])		
+
+	# 读取报单通知返回结构的所有字段列表和原始类型
+	onRtnOrderDataStruct = cpphelper.getClass(ThostFtdcUserApiStruct_h,onRtnOrderParameters[0]['raw_type'])
+	onRtnOrderFields = cpphelper.getStructFields(onRtnOrderDataStruct)
+	addEnumInfo(onRtnOrderFields,typedefDict,enumDict)
+	#for field in onRtnOrderFields:
+	#	typedef = typedefDict[ field['type'] ]
+    #    field['original'] = typedef['type']
+    #    field['len'] = typedef['len']
+    #    field['enums'] = enumDict.get(field['type'])
+	
+	# 读取成交通知返回结构的所有字段列表和原始类型
+	onRtnTradeDataStruct = cpphelper.getClass(ThostFtdcUserApiStruct_h,onRtnTradeParameters[0]['raw_type'])		
+	onRtnTradeFields = cpphelper.getStructFields(onRtnTradeDataStruct)
+	addEnumInfo(onRtnTradeFields,typedefDict,enumDict):
 	
 	# 生成模板所需的信息集
 	data = {
