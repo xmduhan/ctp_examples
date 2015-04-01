@@ -119,18 +119,18 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 
 	}
 
-	//{{ onErrRtnOrderMethod['doxygen'].decode('utf8') }}
-    virtual {{ onErrRtnOrderMethod['returns'] }} {{ onErrRtnOrderMethod['name'] }}(
-        {% for parameter in onErrRtnOrderParameters -%}
+	//{{ onErrRtnOrderInsertMethod['doxygen'].decode('utf8') }}
+    virtual {{ onErrRtnOrderInsertMethod['returns'] }} {{ onErrRtnOrderInsertMethod['name'] }}(
+        {% for parameter in onErrRtnOrderInsertParameters -%}
             {{  parameter['type'] }} {{ parameter['name'] -}}
             {% if not loop.last %},{% endif %}
         {% endfor -%}
     ){
-        printf("{{ onErrRtnOrderMethod['name'] }}():被执行...\n");
+        printf("{{ onErrRtnOrderInsertMethod['name'] }}():被执行...\n");
         // 如果有返回结果读取返回信息
-        if ( {{ onErrRtnOrderParameters[0]['name']}} != NULL ) {
+        if ( {{ onErrRtnOrderInsertParameters[0]['name']}} != NULL ) {
             // 读取返回信息,并做编码转化
-            {% for field in onErrRtnOrderFields -%}
+            {% for field in onErrRtnOrderInsertFields -%}
                 {{field['doxygen'].decode('utf8')}} {{ field['type'] }} {{ field['original'] -}}
                 {% if field['len'] %}[{{ field['len'] }}]{% endif %}
                 {% if field['enums'] -%}
@@ -140,12 +140,12 @@ class CTraderHandler : public CThostFtdcTraderSpi{
                 {% endif -%}
                 {% if field['original'] == 'char' and field['len'] != None -%}
                     {{field['original']}} {{field['name']}}[{{ field['len'] | int * 3 }}];
-                    {# strcpy({{ field['name'] }},{{ onErrRtnOrderParameters[0]['name'] }}->{{ field['name'] }}); -#}
-                    gbk2utf8({{ onErrRtnOrderParameters[0]['name'] }}->{{ field['name'] }},{{ field['name'] }},sizeof({{ field['name'] }}));
+                    {# strcpy({{ field['name'] }},{{ onErrRtnOrderInsertParameters[0]['name'] }}->{{ field['name'] }}); -#}
+                    gbk2utf8({{ onErrRtnOrderInsertParameters[0]['name'] }}->{{ field['name'] }},{{ field['name'] }},sizeof({{ field['name'] }}));
                 {% elif field['original'] == 'char' and field['len'] == None -%}
-                    {{field['original']}} {{ field['name'] }} = {{ onErrRtnOrderParameters[0]['name'] }}->{{ field['name'] }};
+                    {{field['original']}} {{ field['name'] }} = {{ onErrRtnOrderInsertParameters[0]['name'] }}->{{ field['name'] }};
                 {% elif field['original'] != 'char' and field['len'] == None -%}
-                    {{field['original']}} {{ field['name'] }} = {{ onErrRtnOrderParameters[0]['name'] }}->{{ field['name'] }};
+                    {{field['original']}} {{ field['name'] }} = {{ onErrRtnOrderInsertParameters[0]['name'] }}->{{ field['name'] }};
                 {% else -%}
                     {{ field['name'] }} = ;
                 {% endif -%}

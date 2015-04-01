@@ -319,139 +319,9 @@ public:
             int ZCETotalTradedVolume = pOrder->ZCETotalTradedVolume;
             ///互换单标志 TThostFtdcBoolType int
             int IsSwapOrder = pOrder->IsSwapOrder;
-
-
+			
 			printf("OrderSysID=%s,OrderSubmitStatus=%c,OrderStatus=%c\n",OrderSysID,OrderSubmitStatus,OrderStatus);
 
-        }
-
-    }
-
-    /////报单录入错误回报
-    virtual void OnErrRtnOrderInsert(
-        CThostFtdcInputOrderField * pInputOrder,
-        CThostFtdcRspInfoField * pRspInfo
-    ) {
-        printf("OnErrRtnOrderInsert():被执行...\n");
-        // 如果有返回结果读取返回信息
-        if ( pInputOrder != NULL ) {
-            // 读取返回信息,并做编码转化
-            ///经纪公司代码 TThostFtdcBrokerIDType char[11]
-            char BrokerID[33];
-            gbk2utf8(pInputOrder->BrokerID,BrokerID,sizeof(BrokerID));
-            ///投资者代码 TThostFtdcInvestorIDType char[13]
-            char InvestorID[39];
-            gbk2utf8(pInputOrder->InvestorID,InvestorID,sizeof(InvestorID));
-            ///合约代码 TThostFtdcInstrumentIDType char[31]
-            char InstrumentID[93];
-            gbk2utf8(pInputOrder->InstrumentID,InstrumentID,sizeof(InstrumentID));
-            ///报单引用 TThostFtdcOrderRefType char[13]
-            char OrderRef[39];
-            gbk2utf8(pInputOrder->OrderRef,OrderRef,sizeof(OrderRef));
-            ///用户代码 TThostFtdcUserIDType char[16]
-            char UserID[48];
-            gbk2utf8(pInputOrder->UserID,UserID,sizeof(UserID));
-            ///报单价格条件 TThostFtdcOrderPriceTypeType char
-            //// THOST_FTDC_OPT_AnyPrice '1' 任意价
-            //// THOST_FTDC_OPT_LimitPrice '2' 限价
-            //// THOST_FTDC_OPT_BestPrice '3' 最优价
-            //// THOST_FTDC_OPT_LastPrice '4' 最新价
-            //// THOST_FTDC_OPT_LastPricePlusOneTicks '5' 最新价浮动上浮1个ticks
-            //// THOST_FTDC_OPT_LastPricePlusTwoTicks '6' 最新价浮动上浮2个ticks
-            //// THOST_FTDC_OPT_LastPricePlusThreeTicks '7' 最新价浮动上浮3个ticks
-            //// THOST_FTDC_OPT_AskPrice1 '8' 卖一价
-            //// THOST_FTDC_OPT_AskPrice1PlusOneTicks '9' 卖一价浮动上浮1个ticks
-            //// THOST_FTDC_OPT_AskPrice1PlusTwoTicks 'A' 卖一价浮动上浮2个ticks
-            //// THOST_FTDC_OPT_AskPrice1PlusThreeTicks 'B' 卖一价浮动上浮3个ticks
-            //// THOST_FTDC_OPT_BidPrice1 'C' 买一价
-            //// THOST_FTDC_OPT_BidPrice1PlusOneTicks 'D' 买一价浮动上浮1个ticks
-            //// THOST_FTDC_OPT_BidPrice1PlusTwoTicks 'E' 买一价浮动上浮2个ticks
-            //// THOST_FTDC_OPT_BidPrice1PlusThreeTicks 'F' 买一价浮动上浮3个ticks
-            char OrderPriceType = pInputOrder->OrderPriceType;
-            ///买卖方向 TThostFtdcDirectionType char
-            //// THOST_FTDC_D_Buy '0' 买
-            //// THOST_FTDC_D_Sell '1' 卖
-            char Direction = pInputOrder->Direction;
-            ///组合开平标志 TThostFtdcCombOffsetFlagType char[5]
-            //// THOST_FTDC_OF_Open '0' 开仓
-            //// THOST_FTDC_OF_Close '1' 平仓
-            //// THOST_FTDC_OF_ForceClose '2' 强平
-            //// THOST_FTDC_OF_CloseToday '3' 平今
-            //// THOST_FTDC_OF_CloseYesterday '4' 平昨
-            //// THOST_FTDC_OF_ForceOff '5' 强减
-            //// THOST_FTDC_OF_LocalForceClose '6' 本地强平
-            char CombOffsetFlag[15];
-            gbk2utf8(pInputOrder->CombOffsetFlag,CombOffsetFlag,sizeof(CombOffsetFlag));
-            ///组合投机套保标志 TThostFtdcCombHedgeFlagType char[5]
-            //// THOST_FTDC_HF_Speculation '1' 投机
-            //// THOST_FTDC_HF_Arbitrage '2' 套利
-            //// THOST_FTDC_HF_Hedge '3' 套保
-            char CombHedgeFlag[15];
-            gbk2utf8(pInputOrder->CombHedgeFlag,CombHedgeFlag,sizeof(CombHedgeFlag));
-            ///价格 TThostFtdcPriceType double
-            double LimitPrice = pInputOrder->LimitPrice;
-            ///数量 TThostFtdcVolumeType int
-            int VolumeTotalOriginal = pInputOrder->VolumeTotalOriginal;
-            ///有效期类型 TThostFtdcTimeConditionType char
-            //// THOST_FTDC_TC_IOC '1' 立即完成，否则撤销
-            //// THOST_FTDC_TC_GFS '2' 本节有效
-            //// THOST_FTDC_TC_GFD '3' 当日有效
-            //// THOST_FTDC_TC_GTD '4' 指定日期前有效
-            //// THOST_FTDC_TC_GTC '5' 撤销前有效
-            //// THOST_FTDC_TC_GFA '6' 集合竞价有效
-            char TimeCondition = pInputOrder->TimeCondition;
-            ///GTD日期 TThostFtdcDateType char[9]
-            char GTDDate[27];
-            gbk2utf8(pInputOrder->GTDDate,GTDDate,sizeof(GTDDate));
-            ///成交量类型 TThostFtdcVolumeConditionType char
-            //// THOST_FTDC_VC_AV '1' 任何数量
-            //// THOST_FTDC_VC_MV '2' 最小数量
-            //// THOST_FTDC_VC_CV '3' 全部数量
-            char VolumeCondition = pInputOrder->VolumeCondition;
-            ///最小成交量 TThostFtdcVolumeType int
-            int MinVolume = pInputOrder->MinVolume;
-            ///触发条件 TThostFtdcContingentConditionType char
-            //// THOST_FTDC_CC_Immediately '1' 立即
-            //// THOST_FTDC_CC_Touch '2' 止损
-            //// THOST_FTDC_CC_TouchProfit '3' 止赢
-            //// THOST_FTDC_CC_ParkedOrder '4' 预埋单
-            //// THOST_FTDC_CC_LastPriceGreaterThanStopPrice '5' 最新价大于条件价
-            //// THOST_FTDC_CC_LastPriceGreaterEqualStopPrice '6' 最新价大于等于条件价
-            //// THOST_FTDC_CC_LastPriceLesserThanStopPrice '7' 最新价小于条件价
-            //// THOST_FTDC_CC_LastPriceLesserEqualStopPrice '8' 最新价小于等于条件价
-            //// THOST_FTDC_CC_AskPriceGreaterThanStopPrice '9' 卖一价大于条件价
-            //// THOST_FTDC_CC_AskPriceGreaterEqualStopPrice 'A' 卖一价大于等于条件价
-            //// THOST_FTDC_CC_AskPriceLesserThanStopPrice 'B' 卖一价小于条件价
-            //// THOST_FTDC_CC_AskPriceLesserEqualStopPrice 'C' 卖一价小于等于条件价
-            //// THOST_FTDC_CC_BidPriceGreaterThanStopPrice 'D' 买一价大于条件价
-            //// THOST_FTDC_CC_BidPriceGreaterEqualStopPrice 'E' 买一价大于等于条件价
-            //// THOST_FTDC_CC_BidPriceLesserThanStopPrice 'F' 买一价小于条件价
-            //// THOST_FTDC_CC_BidPriceLesserEqualStopPrice 'H' 买一价小于等于条件价
-            char ContingentCondition = pInputOrder->ContingentCondition;
-            ///止损价 TThostFtdcPriceType double
-            double StopPrice = pInputOrder->StopPrice;
-            ///强平原因 TThostFtdcForceCloseReasonType char
-            //// THOST_FTDC_FCC_NotForceClose '0' 非强平
-            //// THOST_FTDC_FCC_LackDeposit '1' 资金不足
-            //// THOST_FTDC_FCC_ClientOverPositionLimit '2' 客户超仓
-            //// THOST_FTDC_FCC_MemberOverPositionLimit '3' 会员超仓
-            //// THOST_FTDC_FCC_NotMultiple '4' 持仓非整数倍
-            //// THOST_FTDC_FCC_Violation '5' 违规
-            //// THOST_FTDC_FCC_Other '6' 其它
-            //// THOST_FTDC_FCC_PersonDeliv '7' 自然人临近交割
-            char ForceCloseReason = pInputOrder->ForceCloseReason;
-            ///自动挂起标志 TThostFtdcBoolType int
-            int IsAutoSuspend = pInputOrder->IsAutoSuspend;
-            ///业务单元 TThostFtdcBusinessUnitType char[21]
-            char BusinessUnit[63];
-            gbk2utf8(pInputOrder->BusinessUnit,BusinessUnit,sizeof(BusinessUnit));
-            ///请求编号 TThostFtdcRequestIDType int
-            int RequestID = pInputOrder->RequestID;
-            ///用户强评标志 TThostFtdcBoolType int
-            int UserForceClose = pInputOrder->UserForceClose;
-            ///互换单标志 TThostFtdcBoolType int
-            int IsSwapOrder = pInputOrder->IsSwapOrder;
-						
         }
 
     }
@@ -571,6 +441,8 @@ public:
             char TradeSource = pTrade->TradeSource;
 
 			printf("成交(%s %s):价格%f,数量%d\n",TradeDate,TradeTime,Price,Volume);
+
+			sem_post(&sem);	
 
         }
 
@@ -819,15 +691,15 @@ int main() {
     memset(&requestData,0,sizeof(requestData));
     // 为调用结构题设置参数信息
     ///经纪公司代码 TThostFtdcBrokerIDType char[11]
-    strcpy(requestData.BrokerID,"");
+    strcpy(requestData.BrokerID,CTP_BrokerId);
     ///投资者代码 TThostFtdcInvestorIDType char[13]
-    strcpy(requestData.InvestorID,"");
+    strcpy(requestData.InvestorID,CTP_UserId);
     ///合约代码 TThostFtdcInstrumentIDType char[31]
-    strcpy(requestData.InstrumentID,"");
+    strcpy(requestData.InstrumentID,"IF1504");
     ///报单引用 TThostFtdcOrderRefType char[13]
     strcpy(requestData.OrderRef,"");
     ///用户代码 TThostFtdcUserIDType char[16]
-    strcpy(requestData.UserID,"");
+    strcpy(requestData.UserID,CTP_UserId);
     ///报单价格条件 TThostFtdcOrderPriceTypeType char
     //// THOST_FTDC_OPT_AnyPrice '1' 任意价
     //// THOST_FTDC_OPT_LimitPrice '2' 限价
@@ -857,16 +729,16 @@ int main() {
     //// THOST_FTDC_OF_CloseYesterday '4' 平昨
     //// THOST_FTDC_OF_ForceOff '5' 强减
     //// THOST_FTDC_OF_LocalForceClose '6' 本地强平
-    strcpy(requestData.CombOffsetFlag,"");
+    strcpy(requestData.CombOffsetFlag,"0");
     ///组合投机套保标志 TThostFtdcCombHedgeFlagType char[5]
     //// THOST_FTDC_HF_Speculation '1' 投机
     //// THOST_FTDC_HF_Arbitrage '2' 套利
     //// THOST_FTDC_HF_Hedge '3' 套保
-    strcpy(requestData.CombHedgeFlag,"");
+    strcpy(requestData.CombHedgeFlag,"1");
     ///价格 TThostFtdcPriceType double
     requestData.LimitPrice = 0;
     ///数量 TThostFtdcVolumeType int
-    requestData.VolumeTotalOriginal = 0;
+    requestData.VolumeTotalOriginal = 1;
     ///有效期类型 TThostFtdcTimeConditionType char
     //// THOST_FTDC_TC_IOC '1' 立即完成，否则撤销
     //// THOST_FTDC_TC_GFS '2' 本节有效
@@ -874,16 +746,16 @@ int main() {
     //// THOST_FTDC_TC_GTD '4' 指定日期前有效
     //// THOST_FTDC_TC_GTC '5' 撤销前有效
     //// THOST_FTDC_TC_GFA '6' 集合竞价有效
-    requestData.TimeCondition = '0';
+    requestData.TimeCondition = '1';
     ///GTD日期 TThostFtdcDateType char[9]
     strcpy(requestData.GTDDate,"");
     ///成交量类型 TThostFtdcVolumeConditionType char
     //// THOST_FTDC_VC_AV '1' 任何数量
     //// THOST_FTDC_VC_MV '2' 最小数量
     //// THOST_FTDC_VC_CV '3' 全部数量
-    requestData.VolumeCondition = '0';
+    requestData.VolumeCondition = '1';
     ///最小成交量 TThostFtdcVolumeType int
-    requestData.MinVolume = 0;
+    requestData.MinVolume = 1;
     ///触发条件 TThostFtdcContingentConditionType char
     //// THOST_FTDC_CC_Immediately '1' 立即
     //// THOST_FTDC_CC_Touch '2' 止损
@@ -901,7 +773,7 @@ int main() {
     //// THOST_FTDC_CC_BidPriceGreaterEqualStopPrice 'E' 买一价大于等于条件价
     //// THOST_FTDC_CC_BidPriceLesserThanStopPrice 'F' 买一价小于条件价
     //// THOST_FTDC_CC_BidPriceLesserEqualStopPrice 'H' 买一价小于等于条件价
-    requestData.ContingentCondition = '0';
+    requestData.ContingentCondition = '1';
     ///止损价 TThostFtdcPriceType double
     requestData.StopPrice = 0;
     ///强平原因 TThostFtdcForceCloseReasonType char
