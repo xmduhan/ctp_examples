@@ -119,6 +119,41 @@ class CTraderHandler : public CThostFtdcTraderSpi{
 
 	}
 
+	//{{ onErrRtnOrderMethod['doxygen'].decode('utf8') }}
+    virtual {{ onErrRtnOrderMethod['returns'] }} {{ onErrRtnOrderMethod['name'] }}(
+        {% for parameter in onErrRtnOrderParameters -%}
+            {{  parameter['type'] }} {{ parameter['name'] -}}
+            {% if not loop.last %},{% endif %}
+        {% endfor -%}
+    ){
+        printf("{{ onErrRtnOrderMethod['name'] }}():被执行...\n");
+        // 如果有返回结果读取返回信息
+        if ( {{ onErrRtnOrderParameters[0]['name']}} != NULL ) {
+            // 读取返回信息,并做编码转化
+            {% for field in onErrRtnOrderFields -%}
+                {{field['doxygen'].decode('utf8')}} {{ field['type'] }} {{ field['original'] -}}
+                {% if field['len'] %}[{{ field['len'] }}]{% endif %}
+                {% if field['enums'] -%}
+                    {% for enum in field['enums'] -%}
+                        //// {{enum['name']}} {{enum['value']}} {{enum['remark'].decode('utf8')}}
+                    {% endfor -%}
+                {% endif -%}
+                {% if field['original'] == 'char' and field['len'] != None -%}
+                    {{field['original']}} {{field['name']}}[{{ field['len'] | int * 3 }}];
+                    {# strcpy({{ field['name'] }},{{ onErrRtnOrderParameters[0]['name'] }}->{{ field['name'] }}); -#}
+                    gbk2utf8({{ onErrRtnOrderParameters[0]['name'] }}->{{ field['name'] }},{{ field['name'] }},sizeof({{ field['name'] }}));
+                {% elif field['original'] == 'char' and field['len'] == None -%}
+                    {{field['original']}} {{ field['name'] }} = {{ onErrRtnOrderParameters[0]['name'] }}->{{ field['name'] }};
+                {% elif field['original'] != 'char' and field['len'] == None -%}
+                    {{field['original']}} {{ field['name'] }} = {{ onErrRtnOrderParameters[0]['name'] }}->{{ field['name'] }};
+                {% else -%}
+                    {{ field['name'] }} = ;
+                {% endif -%}
+            {% endfor %}
+        }
+
+    }
+
 	
 	//{{ onRtnTradeMethod['doxygen'].decode('utf8') }}
     virtual {{ onRtnTradeMethod['returns'] }} {{ onRtnTradeMethod['name'] }}(
