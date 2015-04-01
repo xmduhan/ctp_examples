@@ -319,6 +319,8 @@ public:
             int ZCETotalTradedVolume = pOrder->ZCETotalTradedVolume;
             ///互换单标志 TThostFtdcBoolType int
             int IsSwapOrder = pOrder->IsSwapOrder;
+			
+			printf("OrderSysID=%s,OrderSubmitStatus=%c,OrderStatus=%c\n",OrderSysID,OrderSubmitStatus,OrderStatus);
 
         }
 
@@ -437,6 +439,10 @@ public:
             //// THOST_FTDC_TSRC_NORMAL '0' 来自交易所普通回报
             //// THOST_FTDC_TSRC_QUERY '1' 来自查询
             char TradeSource = pTrade->TradeSource;
+
+			printf("成交(%s %s):价格%f,数量%d\n",TradeDate,TradeTime,Price,Volume);
+
+			sem_post(&sem);	
 
         }
 
@@ -691,9 +697,9 @@ int main() {
     ///合约代码 TThostFtdcInstrumentIDType char[31]
     strcpy(requestData.InstrumentID,"IF1504");
     ///报单引用 TThostFtdcOrderRefType char[13]
-    strcpy(requestData.OrderRef,"000000000001");
+    strcpy(requestData.OrderRef,"");
     ///用户代码 TThostFtdcUserIDType char[16]
-    strcpy(requestData.UserID,"CTP_UserId");
+    strcpy(requestData.UserID,CTP_UserId);
     ///报单价格条件 TThostFtdcOrderPriceTypeType char
     //// THOST_FTDC_OPT_AnyPrice '1' 任意价
     //// THOST_FTDC_OPT_LimitPrice '2' 限价
@@ -710,7 +716,7 @@ int main() {
     //// THOST_FTDC_OPT_BidPrice1PlusOneTicks 'D' 买一价浮动上浮1个ticks
     //// THOST_FTDC_OPT_BidPrice1PlusTwoTicks 'E' 买一价浮动上浮2个ticks
     //// THOST_FTDC_OPT_BidPrice1PlusThreeTicks 'F' 买一价浮动上浮3个ticks
-    requestData.OrderPriceType = '1';
+    requestData.OrderPriceType = '0';
     ///买卖方向 TThostFtdcDirectionType char
     //// THOST_FTDC_D_Buy '0' 买
     //// THOST_FTDC_D_Sell '1' 卖

@@ -197,8 +197,7 @@ public:
             ///保证金率(按手数) TThostFtdcRatioType double
             double MarginRateByVolume = pInvestorPosition->MarginRateByVolume;
 
-			printf("InstrumentID=%s,PosiDirection=%c,Position=%d,OpenVolume=%d,PositionCost=%.2f,CloseProfitByDate=%.2f\n",
-					InstrumentID,PosiDirection,Position,OpenVolume,PositionCost,CloseProfitByDate);
+			printf("InstrumentID=%s,PosiDirection=%c,Position=%d,OpenVolume=%d,PositionCost=%.2f,CloseProfitByDate=%.2f,CloseVolume=%d\n",InstrumentID,PosiDirection,Position,OpenVolume,PositionCost,CloseProfitByDate,CloseVolume);
 
         }
 

@@ -80,6 +80,10 @@ def main():
 	onRtnTradeMethod = cpphelper.getClassMethod(CThostFtdcTraderSpi,'public',onRtnTradeMethodName)
 	onRtnTradeParameters =cpphelper.getMethodParameters(onRtnTradeMethod)	
 
+	# 读取入单错误回调函数信息
+	onErrRtnOrderMethodName = 'OnErrRtnOrder'
+	onErrRtnOrderMethod = cpphelper.getClassMethod(CThostFtdcTraderSpi,'public',onErrRtnOrderMethodName)
+	onErrRtnOrderParameters =cpphelper.getMethodParameters(onErrRtnOrderMethod)
 
 	# 检查请求函数的参数格式是否符合预期
 	methedDeclare = '%s(%s)' % (requestMethod['name'],
@@ -113,6 +117,12 @@ def main():
 	onRtnTradeDataStruct = cpphelper.getClass(ThostFtdcUserApiStruct_h,onRtnTradeParameters[0]['raw_type'])		
 	onRtnTradeFields = cpphelper.getStructFields(onRtnTradeDataStruct)
 	addEnumInfo(onRtnTradeFields,typedefDict,enumDict)
+
+	# 读取订单录入错误信息回报消息的字段列表和原始类型
+	onErrRtnOrderDataStruct = cpphelper.getClass(ThostFtdcUserApiStruct_h,onErrRtnOrderParameters[0]['raw_type'])
+	onErrRtnOrderFields =  cpphelper.getStructFields(onErrRtnOrderDataStruct)
+	addEnumInfo(onErrRtnOrderFields,,typedefDict,enumDict)
+
 	
 	# 生成模板所需的信息集
 	data = {
@@ -133,6 +143,10 @@ def main():
 		'onRtnTradeMethod' : onRtnTradeMethod,
 		'onRtnTradeParameters' : onRtnTradeParameters,
 		'onRtnTradeFields' : onRtnTradeFields,
+		# 订单错误回报函数
+		'onErrRtnOrderMethod' : onErrRtnOrderMethod,
+		'onErrRtnOrderParameters' : onErrRtnOrderParameters,
+		'onErrRtnOrderFields' : onErrRtnOrderFields
 	}
 
 
