@@ -4,8 +4,8 @@ CC=g++
 CFLAGS=-pthread -I$(IDIR) $(LIBS)
 
 all : *.cpp
-	$(CC) *.cpp $(CFLAGS) -o execute 
+	$(CC) *.cpp $(CFLAGS) -o QryParkedOrder
 
 
 clean :
-	rm -f *.o rm *.out *.con *.orig execute 
+	rm -f *.o rm *.out *.con *.orig QryParkedOrder
