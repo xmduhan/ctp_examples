@@ -319,8 +319,12 @@ public:
 			printf("Direction=%c,",Direction); // 买卖方向
 			printf("LimitPrice=%f,",LimitPrice); // 价格
 			printf("VolumeTotalOriginal=%d,",VolumeTotalOriginal); // 数量
-            printf("TimeCondition=%c\n\n",TimeCondition); // 有效期类型
-
+            printf("TimeCondition=%c,",TimeCondition); // 有效期类型
+			printf("OrderStatus=%c,",OrderStatus); // 报单状态
+			printf("OrderSubmitStatus=%c,",OrderSubmitStatus); // 报单提交状态
+			printf("OrderSysID=%s,",OrderSysID); // 报单提交状态
+			printf("FrontID=%d,",FrontID); // 前置编号
+			printf("SessionID=%d\n",SessionID); // 会话编号
         }
 
         // 如果响应函数已经返回最后一条信息

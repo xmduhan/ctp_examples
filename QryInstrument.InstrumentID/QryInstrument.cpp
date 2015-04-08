@@ -247,7 +247,7 @@ int main() {
     memset(&requestData,0,sizeof(requestData));
     // 为调用结构题设置参数信息
     ///合约代码 TThostFtdcInstrumentIDType char[31]
-    strcpy(requestData.InstrumentID,"SR609C4900");
+    strcpy(requestData.InstrumentID,"IF1504");
     ///交易所代码 TThostFtdcExchangeIDType char[9]
     strcpy(requestData.ExchangeID,"");
     ///合约在交易所的代码 TThostFtdcExchangeInstIDType char[31]
