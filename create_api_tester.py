@@ -47,10 +47,10 @@ def main():
 	os.makedirs(apiName)	
 	
 	# 读取相关cpp头文件	
-	ThostFtdcTraderApi_h = cpphelper.getCppHeader('api/ThostFtdcTraderApi.h',['TRADER_API_EXPORT'])
-	ThostFtdcUserApiStruct_h = cpphelper.getCppHeader('api/ThostFtdcUserApiStruct.h')
-	typedefDict = cpphelper.getTypedefDict('api/ThostFtdcUserApiDataType.h')
-	enumDict = cpphelper.getEnumDict('api/ThostFtdcUserApiDataType.h')	
+	ThostFtdcTraderApi_h = cpphelper.getCppHeader('include/ThostFtdcTraderApi.h',['TRADER_API_EXPORT'])
+	ThostFtdcUserApiStruct_h = cpphelper.getCppHeader('include/ThostFtdcUserApiStruct.h')
+	typedefDict = cpphelper.getTypedefDict('include/ThostFtdcUserApiDataType.h')
+	enumDict = cpphelper.getEnumDict('include/ThostFtdcUserApiDataType.h')	
 	
 	# 将TThostFtdcOffsetFlagType类型数据映射到TThostFtdcCombOffsetFlagType
 	# TThostFtdcCombOffsetFlagType表示多个TThostFtdcOffsetFlagType位的组合其实际字段含义在TThostFtdcOffsetFlagType中说明
