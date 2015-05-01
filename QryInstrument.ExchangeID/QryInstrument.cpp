@@ -16,6 +16,7 @@
 
 // 字符串编码转化
 #include <code_convert.h>
+#include <unistd.h>
 
 // 登录请求结构体
 CThostFtdcReqUserLoginField userLoginField;
@@ -67,6 +68,7 @@ public:
         } else {
             printf("登出失败!\n");
         }
+	printf("--------------------1------------------------\n");
     }
 
     // 错误信息响应方法
@@ -263,13 +265,19 @@ int main() {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+    sleep(1);
+
     // 拷贝用户登录信息到登出信息
     strcpy(userLogoutField.BrokerID,userLoginField.BrokerID);
     strcpy(userLogoutField.UserID, userLoginField.UserID);
     pTraderApi->ReqUserLogout(&userLogoutField, requestID++);
 
+
     // 等待登出成功
     sem_wait(&sem);
+    printf("------------2------------------\n");
+
+    sleep(1);    
 
     printf("主线程执行完毕!\n");
     return(0);

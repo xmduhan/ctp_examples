@@ -1,5 +1,5 @@
 IDIR =../include
-LIBS =../lib/*.o /etc/ctp/lib/*.so
+LIBS =../lib/*.o ../lib/*.so
 CC=g++
 CFLAGS=-pthread -I$(IDIR) $(LIBS)
 
